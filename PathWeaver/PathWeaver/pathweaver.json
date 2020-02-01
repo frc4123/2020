@@ -1,0 +1,8 @@
+{
+  "lengthUnit": "Meter",
+  "maxVelocity": 0.25,
+  "maxAcceleration": 0.25,
+  "wheelBase": 0.635,
+  "gameName": "2020",
+  "outputDir": ""
+}
