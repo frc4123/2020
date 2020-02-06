@@ -11,7 +11,7 @@ import java.io.IOException;
 // import java.io.IOException;
 import java.nio.file.Paths;
 // import java.util.Arrays;
-
+import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.XboxController;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 // import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 // import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
@@ -36,6 +37,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
 // import edu.wpi.first.wpilibj.geometry.Rotation2d;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -189,39 +193,38 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   Trajectory trajectory;
+
   public Trajectory getTrajectory() {
-    try{
-    trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/PleaseStraight.wpilib.json"));
+    try {
+      trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/PleaseStraight.wpilib.json"));
     }
 
-    catch (IOException e)
-    {
+    catch (IOException e) {
       e.printStackTrace();
     }
     return trajectory;
   }
+
   public Command getAutonomousCommand()
   {
-    TrajectoryConfig config = new TrajectoryConfig(.25, .25);
-
-    config.setKinematics(robotDrive.getKinematics());
-
-    
-  
+    TrajectoryConfig config = new TrajectoryConfig(.25, .25).setKinematics(robotDrive.getKinematics());
       
-      //Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/SimplePath.wpilib.json"));
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)), 
       
-  
- 
-    // if it compiles with errors comment out the above line and uncomment the bellow lijne (after the variable declaration)
-    
-    // TrajectoryGenerator.generateTrajectory(
-    // Arrays.asList(new Pose2d(), new Pose2d(2.0, 0, new Rotation2d())),
-    // config);
-    
- 
+      List.of(
+        new Translation2d(1,1),
+        new Translation2d(2,-1)
+        ),
+
+      new Pose2d(3, 0, new Rotation2d(0)),
+      
+      config);
+
+      //TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/SimplePath.wpilib.json"));
+       
       RamseteCommand command = new RamseteCommand(
-       getTrajectory(),
+       trajectory,
        robotDrive::getPose,
        new RamseteController(2.0, 0.7),
        robotDrive.getFeedfoward(),
@@ -235,8 +238,8 @@ public class RobotContainer {
 
      
    
-   
-    return command;
+   //ramsete does not auto send a 0,0 to the output
+    return command.andThen(() -> robotDrive.setOutput(0,0));
      
   }
   // auto chooser for SD??

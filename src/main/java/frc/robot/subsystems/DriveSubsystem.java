@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
@@ -33,22 +34,22 @@ public class DriveSubsystem extends SubsystemBase {
   public static final Supplier<DifferentialDriveWheelSpeeds> getWheelSpeeds = null;
 // Creating hardware
   WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER);
-  WPI_TalonSRX leftSlave = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_SLAVE);
+  WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE);
   WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER);
-  WPI_TalonSRX rightSlave = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_SLAVE);                              
+  WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE);   
+
+  // The robot's drive
+  private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
   // gyro
   //if the gyro isn't recognized change the 0 to another number
   ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
-  // The robot's drive
-  private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
-
+  DifferentialDriveOdometry diffDriveOdo;
   //Trajectory stuff
   Pose2d pose;
 
   DifferentialDriveKinematics diffDriveKine = new DifferentialDriveKinematics(Units.inchesToMeters(25));
-  DifferentialDriveOdometry diffDriveOdo = new DifferentialDriveOdometry(getHeading());
 
   SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
  
@@ -60,6 +61,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     leftMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     rightMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+    resetEncoders();
+
+   diffDriveOdo = new DifferentialDriveOdometry(getHeading());
 
   }
 
@@ -74,7 +79,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void arcadeDrive(double fwd, double rot) {
 
     //set to true so it is less sensitive at lower speeds
-    differentialDrive.arcadeDrive(fwd, rot, true); //(fwd, rot, true);
+    differentialDrive.arcadeDrive(fwd, rot); //(fwd, rot, true);
 
   }
 
@@ -141,8 +146,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setOutput(double leftVolts, double rightVolts) {
-    leftMaster.setVoltage(leftVolts / 12);
-    rightMaster.setVoltage(-rightVolts / 12);
+    leftMaster.setVoltage(leftVolts);
+    rightMaster.setVoltage(-rightVolts);
+    differentialDrive.feed();
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -182,7 +188,11 @@ public PIDController getRightPIDController(){
  public void periodic(){
 
  // gyroangle = Rotation2d.fromDegrees(-gyro.) 
-  pose = diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
+ pose = diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
+ 
+diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
+ 
+ 
 
   SmartDashboard.putNumber("Gyro Heading", getHeading().getDegrees());
   SmartDashboard.getNumber("Gyro Setpoint", 0);
