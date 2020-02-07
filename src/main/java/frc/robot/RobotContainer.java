@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+// import frc.robot.Constants.AutoAimConstants;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
 // import edu.wpi.first.wpilibj.geometry.Rotation2d;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -67,7 +68,9 @@ public class RobotContainer {
   private final DriveSubsystem robotDrive = new DriveSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  public AutoAimCommand autoAimCommand;
+
+  AutoAimCommand autoAimCommand = null;
+
 
   // The driver's controller
   XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -136,6 +139,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Grab the hatch when the 'A' button is pressed.
+    
     /*
      * new JoystickButton(driverController, Button.kA.value) .whenPressed(new
      * InstantCommand(m_hatchSubsystem::grabHatch, m_hatchSubsystem)); // Release
@@ -171,18 +175,28 @@ public class RobotContainer {
     new JoystickButton(auxDriverController, Button.kB.value).whenPressed(() -> intakeSubsystem.intakeSpeed(1.0))
         .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
 
-    new JoystickButton(driverController, XboxConstants.X_BUTTON).whenPressed(new AutoAimCommand(robotDrive));
+    // new JoystickButton(driverController, XboxConstants.X_BUTTON).whenPressed(new AutoAimCommand(robotDrive));
+    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whenPressed(() -> {
+      autoAimCommand = new AutoAimCommand(robotDrive);
+      autoAimCommand.schedule();  
+      System.out.println("starting auto aim: " + autoAimCommand);
 
-    // new JoystickButton(driverController, Button.kX.value).whenPressed(() -> {
-    // autoAimCommand = new AutoAimCommand(robotDrive);
+    }).whenReleased(() -> {
+
+      if (autoAimCommand != null) {
+        autoAimCommand.cancel();
+      }
+
+    });
+
     // autoAimCommand.schedule();
     // }).whenReleased(() -> {
 
-    // if (autoAimCommand != null) {
+    // // if (autoAimCommand != null) {
 
-    // autoAimCommand.cancel();
+    // // autoAimCommand.cancel();
 
-    // }
+    // // }
     // });
 
   }

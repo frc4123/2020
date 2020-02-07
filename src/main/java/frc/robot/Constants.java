@@ -129,4 +129,10 @@ public final class Constants {
       public static final double OPTIMAL_KD = 4.51;
       //PID STUFF
     }
+
+  public static final class AutoAimConstants{
+    public static final double KP_ROTATION_AUTOAIM = 0.04;
+    public static final double ANGLE_TOLERANCE = 5; //Testing
+    public static final double KF_AUTOAIM =0.10;
+  }
 }

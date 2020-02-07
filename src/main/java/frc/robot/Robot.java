@@ -10,17 +10,8 @@ package frc.robot;
 // import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.XboxConstants;
-import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-// import edu.wpi.first.networktables.NetworkTableValue;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -31,30 +22,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-
-NetworkTable table;
-DriveSubsystem drive = new DriveSubsystem();
-
-NetworkTableEntry targetX;
-NetworkTableEntry targetY;
-SmartDashboard tx;
-
-  //Error values for the control loop
-  double rotationError;
-  double distanceError;
-
-  //Control Loop constants
-  //Positive due to arcadeDrive controls
-  double KpRot = 0.75;
-
-
-  double angleTolerance = 5; //Testing
-
-  double constantForce =0.10;
-  XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);  
-
-  double rotationAjust;
-  double distanceAjust;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -65,20 +32,9 @@ SmartDashboard tx;
   @Override
   public void robotInit() {
 
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
-
-    //network tables
-    table = NetworkTableInstance.getDefault().getTable("chameleon-vision").getSubTable("Microsoft LifeCam HD-3000");
-
-    targetX = table.getEntry("targetYaw");
-    targetY = table.getEntry("targetPitch");
-    
-    SmartDashboard.getNumber("targetYaw", 0.0); //Test this line
-
+/*
+*/
     robotContainer = new RobotContainer();
-
     CameraServer.getInstance().startAutomaticCapture();
 
   }
@@ -94,28 +50,6 @@ SmartDashboard tx;
    */
   @Override
   public void robotPeriodic() {
-    rotationAjust = 5;
-    distanceAjust = 0;
-
-    if (driverController.getRawButton(XboxConstants.A_BUTTON)){ 
-      System.out.println(driverController.getRawButton(XboxConstants.A_BUTTON));
-      rotationError = targetX.getDouble(0.0);
-      distanceError = targetY.getDouble(0.0);
-      // rotationAjust = rotationError; 
-      if (rotationError > angleTolerance){
-        rotationAjust = KpRot * rotationError - constantForce;
-      }
-      else {
-        if  (rotationError < angleTolerance) {
-          rotationAjust = KpRot * rotationError - constantForce;
-        }
-      }
-      drive.arcadeDrive(0, rotationAjust);
-      }
-    // if(TestRot()){
-    //   drive.arcadeDrive(0.9, 0); //Negative Rot turns left
-    // }
-
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -159,6 +93,7 @@ SmartDashboard tx;
       autonomousCommand = robotContainer.getAutonomousCommand();
   
       // schedule the autonomous command (example)
+      //prevents doing things to a null object so robot dont go bye bye
       if (autonomousCommand != null) {
         autonomousCommand.schedule();
       }
