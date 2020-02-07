@@ -159,3 +159,8 @@ imgui.ini
 
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+characterization-project/build/*
+
+characterization-data*
+robotconfig.py
+characterization-project/vendordeps/*
