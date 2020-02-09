@@ -131,8 +131,14 @@ public final class Constants {
     }
 
   public static final class AutoAimConstants{
-    public static final double KP_ROTATION_AUTOAIM = 0.04;
-    public static final double ANGLE_TOLERANCE = 5; //Testing
-    public static final double KF_AUTOAIM =0.10;
+    public static final double KP_ROTATION_AUTOAIM = 0.025;
+    public static final double KD_ROTATION_AUTOAIM = 0.0006;
+    public static final double KF_AUTOAIM = 0.4;
+
+    public static final double ANGLE_TOLERANCE = 2.0; //FOR DEGREES 
+    public static final double ANGLE_SETPOINT = 90.0; //Testing
+    
   }
+
+public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 4;
 }

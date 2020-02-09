@@ -11,10 +11,11 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Constants.AutoAimConstants;
 
-public class AutoAimCommand extends CommandBase {
+
+public class AutoAngleCommand extends CommandBase {
   /**
    * Creates a new AutoAimCommand.
    */
@@ -23,16 +24,22 @@ public class AutoAimCommand extends CommandBase {
   NetworkTableEntry targetX;
   NetworkTableEntry targetY;
 
+  
+
   double rotationError;
   double distanceError;
   double rotationAdjust;
 
   DriveSubsystem driveSubsytem;
 
-  public AutoAimCommand(DriveSubsystem driveSubsystem) {
+  TurnToAngleCommand turnToAngle;
+
+  public AutoAngleCommand(DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveSubsytem = driveSubsystem;
     addRequirements(driveSubsystem);
+
+    turnToAngle = new TurnToAngleCommand(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -44,40 +51,34 @@ public class AutoAimCommand extends CommandBase {
     targetX = table.getEntry("targetYaw");
     targetY = table.getEntry("targetPitch");
 
-    // one time equaTions
+    turnBasedOnCamera();
+    
   }
+  
+  private void turnBasedOnCamera(){
+    double cameraSetpoint = targetX.getDouble(0.0) * 0.7;
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    System.out.println("printblabhalbahbalhbah");
-    // poll tx and ty and
-    rotationError = targetX.getDouble(0.0);
-    distanceError = targetY.getDouble(0.0);
-    // rotationAjust = rotationError;
+    turnToAngle.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
+    CommandGroupBase.clearGroupedCommand(turnToAngle);
+    System.out.println("turnToAngle.schedule();");
+    // turnToAngle.andThen(() -> {
+    //   System.out.println("finished");
+    //  }).schedule();
+     
+     
+     turnToAngle.schedule();
 
-    if (Math.abs(rotationError) > AutoAimConstants.ANGLE_TOLERANCE) {
-      rotationAdjust = AutoAimConstants.KP_ROTATION_AUTOAIM * rotationError
-          + rotationError / Math.abs(rotationError) * AutoAimConstants.KF_AUTOAIM;
-    } else {
-      rotationAdjust = 0;
-    }
 
-    // else {
-    // if (rotationError < AutoAimConstants.ANGLE_TOLERANCE) {
-    // rotationAdjust = AutoAimConstants.KP_ROTATION_AUTOAIM * rotationError -
-    // AutoAimConstants.KF_AUTOAIM;
-    // }
-    // }
 
-    driveSubsytem.arcadeDrive(0, rotationAdjust);
-    System.out.println(rotationAdjust);
+     
+
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    turnToAngle.cancel();
   }
 
   // Returns true when the command should end.

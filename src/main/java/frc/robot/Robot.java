@@ -8,10 +8,12 @@
 package frc.robot;
 
 // import java.io.IOException;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -35,8 +37,7 @@ public class Robot extends TimedRobot {
 /*
 */
     robotContainer = new RobotContainer();
-    CameraServer.getInstance().startAutomaticCapture();
-
+    
   }
 
   /**
@@ -62,8 +63,8 @@ public class Robot extends TimedRobot {
     
 
     // put smartdahs board things here? check on CD to see if this is appropriate
-    //SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
-    //SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
+    SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
+    SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
     //SmartDashboard.putNumber("Driver Left Trigger",
       //  robotContainer.driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS));
 

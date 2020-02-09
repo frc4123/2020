@@ -90,6 +90,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
 
+  public double getGyroAngle(){
+    return gyro.getAngle();
+  }
+
   public double getLeftPosition(){
 
     return
@@ -131,6 +135,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
+  public void resetGyro(){
+
+    gyro.reset();
+    
+  }
+
   /**
    * Gets the average distance of the TWO encoders.
    *
@@ -147,8 +157,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setOutput(double leftVolts, double rightVolts) {
     leftMaster.setVoltage(leftVolts);
-    rightMaster.setVoltage(-rightVolts);
+    rightMaster.setVoltage(-rightVolts); 
+
     differentialDrive.feed();
+  }
+
+  public void setVoltageCompensation(boolean isEnabled, double volts) {
+    leftMaster.configVoltageCompSaturation(volts);
+    leftMaster.enableVoltageCompensation(isEnabled);
+
+    rightMaster.configVoltageCompSaturation(volts);
+    rightMaster.enableVoltageCompensation(isEnabled);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -196,6 +215,7 @@ diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
 
   SmartDashboard.putNumber("Gyro Heading", getHeading().getDegrees());
   SmartDashboard.getNumber("Gyro Setpoint", 0);
+  SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
  }
  
 }

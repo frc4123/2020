@@ -8,51 +8,28 @@
 package frc.robot;
 
 import java.io.IOException;
-// import java.io.IOException;
 import java.nio.file.Paths;
-// import java.util.Arrays;
 import java.util.List;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-// import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-// import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-// import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-// import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-//import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-//import edu.wpi.first.wpilibj2.command.StartEndCommand;
-//import edu.wpi.first.wpilibj2.command.StartEndCommand;
-//import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-// import frc.robot.Constants.AutoAimConstants;
-// import edu.wpi.first.wpilibj.geometry.Pose2d;
-// import edu.wpi.first.wpilibj.geometry.Rotation2d;
-// import edu.wpi.first.wpilibj.geometry.Pose2d;
-// import edu.wpi.first.wpilibj.geometry.Rotation2d;
-//import frc.robot.Constants.AutoConstants;
-//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.AutoAimCommand;
-//import frc.robot.commands.ComplexAutoCommand;
+import frc.robot.commands.AutoAngleCommand;
 import frc.robot.subsystems.DriveSubsystem;
-//import frc.robot.subsystems.HatchSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -69,7 +46,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-  AutoAimCommand autoAimCommand = null;
+  AutoAngleCommand autoAimCommand = new AutoAngleCommand(robotDrive);
 
 
   // The driver's controller
@@ -174,12 +151,21 @@ public class RobotContainer {
     // 100 percent intake
     new JoystickButton(auxDriverController, Button.kB.value).whenPressed(() -> intakeSubsystem.intakeSpeed(1.0))
         .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
+    
 
     // new JoystickButton(driverController, XboxConstants.X_BUTTON).whenPressed(new AutoAimCommand(robotDrive));
-    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whenPressed(() -> {
-      autoAimCommand = new AutoAimCommand(robotDrive);
-      autoAimCommand.schedule();  
+    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(autoAimCommand);
+    // new JoystickButton(driverController, XboxConstants.Y_BUTTON).whenPressed(turnToAngle)
+    // .whenReleased(() -> {
+    //                       turnToAngle.cancel();
+    //                       robotDrive.resetGyro();
+    //                     });
+    
+    /*whenPressed(() -> {
+      autoAimCommand.schedule();
       System.out.println("starting auto aim: " + autoAimCommand);
+      //= new AutoAimCommand(robotDrive);
+      //autoAimCommand.schedule();  
 
     }).whenReleased(() -> {
 
@@ -188,17 +174,8 @@ public class RobotContainer {
       }
 
     });
-
-    // autoAimCommand.schedule();
-    // }).whenReleased(() -> {
-
-    // // if (autoAimCommand != null) {
-
-    // // autoAimCommand.cancel();
-
-    // // }
-    // });
-
+    */
+    
   }
 
   /**
