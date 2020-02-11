@@ -51,12 +51,8 @@ public final class Constants {
     
     //changes with gears. pinio>big gear * little gear>big botton gear = the value below
 	  public static final double GEAR_RATIO = 9.469;
-  }
 
-  public static final class HatchConstants {
-    // pcm
-    public static final int SOLENOID_PORT = 0;
-    public static final int[] HATCH_SOLENOID_PORTS = new int[] { 0, 1 };
+	public static final int INVERT_ENCODER = -1;
   }
 
   public static final class AutoConstants {

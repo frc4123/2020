@@ -90,7 +90,7 @@ public class RobotContainer {
     // Configure default commands
 
     // Set the default drive command to split-stick arcade drive
-
+    
     robotDrive
         .setDefaultCommand(new RunCommand(() -> robotDrive.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
             driverController.getX(GenericHID.Hand.kRight)), robotDrive));
@@ -115,36 +115,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Grab the hatch when the 'A' button is pressed.
-    
-    /*
-     * new JoystickButton(driverController, Button.kA.value) .whenPressed(new
-     * InstantCommand(m_hatchSubsystem::grabHatch, m_hatchSubsystem)); // Release
-     * the hatch when the 'B' button is pressed. new
-     * JoystickButton(driverController, Button.kB.value) .whenPressed(new
-     * InstantCommand(m_hatchSubsystem::releaseHatch, m_hatchSubsystem)); // While
-     * holding the shoulder button, drive at half speed new
-     * JoystickButton(driverController, Button.kBumperRight.value) .whenPressed(()
-     * -> robotDrive.setMaxOutput(0.5)) .whenReleased(() ->
-     * robotDrive.setMaxOutput(1));
-     */
-    // sets the shooter motor to 80 percent speed
-    /*
-     * new JoystickButton(driverController, Button.kX.value).whenPressed(() ->
-     * shooterSubsystem.shooterSpeed(0.8)) .whenReleased(() ->
-     * shooterSubsystem.shooterSpeed(0.0)); // sets the shooter motor to 90 percent
-     * speed new JoystickButton(driverController, Button.kY.value).whenPressed(() ->
-     * shooterSubsystem.shooterSpeed(0.9)) .whenReleased(() ->
-     * shooterSubsystem.shooterSpeed(0.0)); // 100 percent speed new
-     * JoystickButton(driverController, Button.kB.value).whenPressed(() ->
-     * shooterSubsystem.shooterSpeed(1.0)) .whenReleased(() ->
-     * shooterSubsystem.shooterSpeed(0.0));
-     * 
-     */
-    // half speed intake
-
-    driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS);
-
+  
     new JoystickButton(auxDriverController, Button.kA.value).whenPressed(() -> intakeSubsystem.intakeSpeed(0.5))
         .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
 
@@ -152,37 +123,11 @@ public class RobotContainer {
     new JoystickButton(auxDriverController, Button.kB.value).whenPressed(() -> intakeSubsystem.intakeSpeed(1.0))
         .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
     
-
-    // new JoystickButton(driverController, XboxConstants.X_BUTTON).whenPressed(new AutoAimCommand(robotDrive));
     new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(autoAimCommand);
-    // new JoystickButton(driverController, XboxConstants.Y_BUTTON).whenPressed(turnToAngle)
-    // .whenReleased(() -> {
-    //                       turnToAngle.cancel();
-    //                       robotDrive.resetGyro();
-    //                     });
-    
-    /*whenPressed(() -> {
-      autoAimCommand.schedule();
-      System.out.println("starting auto aim: " + autoAimCommand);
-      //= new AutoAimCommand(robotDrive);
-      //autoAimCommand.schedule();  
-
-    }).whenReleased(() -> {
-
-      if (autoAimCommand != null) {
-        autoAimCommand.cancel();
-      }
-
-    });
-    */
+  
     
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   Trajectory trajectory;
 
   public Trajectory getTrajectory() {

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import io.github.oblarg.oblog.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,10 +34,9 @@ public class Robot extends TimedRobot {
    
   @Override
   public void robotInit() {
-
-/*
-*/
+                                                    
     robotContainer = new RobotContainer();
+    Logger.configureLoggingAndConfig(robotContainer, false);
     
   }
 
@@ -61,12 +61,10 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().run();
     
+    Logger.updateEntries();
+    // SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
+    // SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
 
-    // put smartdahs board things here? check on CD to see if this is appropriate
-    SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
-    SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
-    //SmartDashboard.putNumber("Driver Left Trigger",
-      //  robotContainer.driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS));
 
       
   }

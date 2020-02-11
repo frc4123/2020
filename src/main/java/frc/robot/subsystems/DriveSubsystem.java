@@ -28,10 +28,11 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 
-public class DriveSubsystem extends SubsystemBase {
-  public static final Supplier<DifferentialDriveWheelSpeeds> getWheelSpeeds = null;
+public class DriveSubsystem extends SubsystemBase implements Loggable {
 // Creating hardware
   WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER);
   WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE);
@@ -90,20 +91,23 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
 
+  @Log
   public double getGyroAngle(){
     return gyro.getAngle();
   }
 
+  @Log
   public double getLeftPosition(){
 
     return
       //1 or 10?
       //get rid of magic numbers
-      leftMaster.getSelectedSensorPosition() * DriveConstants.POSITION_FOR_ENCODER  * 2
+      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.POSITION_FOR_ENCODER  * 2
         * Math.PI * Units.inchesToMeters(DriveConstants.WHEEL_RADIUS);
 
   }
 
+  @Log
   public double getRightPosition() {
 
     return
@@ -209,7 +213,7 @@ public PIDController getRightPIDController(){
  // gyroangle = Rotation2d.fromDegrees(-gyro.) 
  pose = diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
  
-diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
+ diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
  
  
 
