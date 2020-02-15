@@ -7,12 +7,10 @@
 
 package frc.robot.commands;
 
-
+//** DO NOT USE THIS CLASS **/
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants;
 import frc.robot.Constants.AutoAimConstants;
 // import frc.robot.Constants.AutoAimConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -26,7 +24,7 @@ public class TurnToAngleCommand extends PIDCommand {
    */
    static double setpoint;
    DriveSubsystem driveSubsystem;
-   double thePerticularChangeInAnglularPositionWeWouldLike=0;
+   double thePerticularChangeInAnglularPositionWeWouldLike;
 
    public TurnToAngleCommand(DriveSubsystem driveSubsystem) {
 
@@ -37,29 +35,21 @@ public class TurnToAngleCommand extends PIDCommand {
         // The controller that the command will use
         new PIDController(.05, 0.006, .01),
         // This should return the measurement
-        () -> driveSubsystem.getGyroAngle() % 360,
+        () -> driveSubsystem.getGyroAngle(),
         // This should return the setpoint (can also be a constant)
         () -> setpoint,
         // This uses the output
-        output -> {
+        output -> 
          // Use the output here
-         driveSubsystem.setOutput(output, -output);
-         System.out.println("OUTPUT " + output);
-        }, driveSubsystem);
+         driveSubsystem.setOutput(output, -output)
+         //System.out.println("OUTPUT " + output);
+        , driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
      
-        getController().enableContinuousInput(0, 360);
+    // getController().enableContinuousInput(0, 360);
     getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
-    
-    
-
-      this.driveSubsystem = driveSubsystem;
-
-
-        
-      SmartDashboard.putNumber("angle_controller_kp", 2.000000);
-      SmartDashboard.putNumber("angle_controller_ki", 0.001000);
-      SmartDashboard.putNumber("angle_controller_kd", 0.050000);
+  
+    this.driveSubsystem = driveSubsystem;
 
   }
     // Configure additional PID options by calling `getController` here.
@@ -67,9 +57,11 @@ public class TurnToAngleCommand extends PIDCommand {
   @Override
   public void initialize() {
     
+    // setpoint = driveSubsystem.getGyroAngle() - 90;
+    // driveSubsystem.setVoltageCompensation(true, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
     super.initialize();
-    driveSubsystem.setVoltageCompensation(true, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
-    setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
+   setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
+    
 
     
  }
@@ -77,8 +69,7 @@ public class TurnToAngleCommand extends PIDCommand {
  /**
   * @param thePerticularChangeInAnglularPositionWeWouldLike the thePerticularChangeInAnglularPositionWeWouldLike to set
   */
- public void setThePerticularChangeInAnglularPositionWeWouldLike(
-     double thePerticularChangeInAnglularPositionWeWouldLike) {
+ public void setThePerticularChangeInAnglularPositionWeWouldLike(double thePerticularChangeInAnglularPositionWeWouldLike) {
    this.thePerticularChangeInAnglularPositionWeWouldLike = thePerticularChangeInAnglularPositionWeWouldLike;
  }
 
@@ -86,26 +77,26 @@ public class TurnToAngleCommand extends PIDCommand {
  @Override
  public void execute() {
    super.execute();
-   SmartDashboard.putNumber("turntoangle_position_error", getController().getPositionError());
+   System.out.println("turntoangle_position_error" + getController().getPositionError());
  }
 
   
    
- @Override
- public void schedule(boolean interruptible) {
+//  @Override
+//  public void schedule(boolean interruptible) {
    
-   super.schedule(interruptible);
+//    super.schedule(interruptible);
 
-   getController().setP(SmartDashboard.getNumber("angle_controller_kp", 0));
-   getController().setI(SmartDashboard.getNumber("angle_controller_ki", 0));
-   getController().setD(SmartDashboard.getNumber("angle_controller_kd", 0));
- }
+//    getController().setP(SmartDashboard.getNumber("angle_controller_kp", 0));
+//    getController().setI(SmartDashboard.getNumber("angle_controller_ki", 0));
+//    getController().setD(SmartDashboard.getNumber("angle_controller_kd", 0));
+//  }
 
- @Override
- public void end(boolean interrupted) {
-   super.end(interrupted);
-   driveSubsystem.setVoltageCompensation(false, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
- }
+//  @Override
+//  public void end(boolean interrupted) {
+//    super.end(interrupted);
+//    driveSubsystem.setVoltageCompensation(false, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
+//  }
 
 
   // Returns true when the command should end.

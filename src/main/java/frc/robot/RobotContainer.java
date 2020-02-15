@@ -29,7 +29,11 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.AutoAngleCommand;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -42,11 +46,15 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem robotDrive = new DriveSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
-  AutoAngleCommand autoAimCommand = new AutoAngleCommand(robotDrive);
+  private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
+  private final IntakeCommand intakeCommand = new IntakeCommand(intakeSubsystem); 
+  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevatorSubsystem);
+  private final ShooterCommand shooterCommand = new ShooterCommand(shooterSubsystem);
 
 
   // The driver's controller
@@ -54,35 +62,20 @@ public class RobotContainer {
   // aux driver
   Joystick auxDriverController = new Joystick(OIConstants.AUXDRIVER_CONTROLLER_PORT);
 
-  // The autonomous routines
-
-  // A simple auto routine that drives forward a specified distance, and then
-  // stops.
-
-  // private double globalTime = Timer.getFPGATimestamp();
-
-  /*
-   * private final Command simpleAuto = new StartEndCommand( // Start driving
-   * forward at the start of the command () ->
-   * robotDrive.arcadeDrive(AutoConstants.kAutoDriveSpeed, 0), // Stop driving at
-   * the end of the command () -> robotDrive.arcadeDrive(0, 0), // Requires the
-   * drive subsystem robotDrive) // End the command when the robot's driven
-   * distance exceeds the desired value // .withInterrupt( // () -> globalTime -
-   * robot.robotInit().autoStartTime >= 3); // //how do we get start time
-   * 
-   * 
-   * // A complex auto routine that drives forward, drops a hatch, and then drives
-   * // backward. private final Command m_complexAuto = new
-   * ComplexAutoCommand(robotDrive, m_hatchSubsystem);
+  /**
+   * Prints "Gyro is calibrating..." and calibrates the gyro.
    */
-
-  // A chooser for autonomous commands
-  // SendableChooser<Command> chooser = new SendableChooser<>();
+  private void calibrate(){
+    System.out.println("Gyro is calibrating...");
+    driveSubsystem.getGyro().calibrate();
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    calibrate();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -91,21 +84,15 @@ public class RobotContainer {
 
     // Set the default drive command to split-stick arcade drive
     
-    robotDrive
-        .setDefaultCommand(new RunCommand(() -> robotDrive.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
-            driverController.getX(GenericHID.Hand.kRight)), robotDrive));
+    driveSubsystem
+        .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
+            driverController.getX(GenericHID.Hand.kRight)), driveSubsystem));
 
     shooterSubsystem.setDefaultCommand(new RunCommand(
         () -> shooterSubsystem.shooterSpeed(driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS)),
         shooterSubsystem));
 
-    // Add commands to the autonomous command chooser
-    // m_chooser.addOption("Simple Auto", simpleAuto);
-    // m_chooser.addOption("Complex Auto", m_complexAuto);
-
-    // Put the chooser on the dashboard
-    // Shuffleboard.getTab("Autonomous").add(chooser);
-
+ 
   }
 
   /**
@@ -116,15 +103,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
   
-    new JoystickButton(auxDriverController, Button.kA.value).whenPressed(() -> intakeSubsystem.intakeSpeed(0.5))
-        .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
+   
 
     // 100 percent intake
-    new JoystickButton(auxDriverController, Button.kB.value).whenPressed(() -> intakeSubsystem.intakeSpeed(1.0))
-        .whenReleased(() -> intakeSubsystem.intakeSpeed(0.0));
-    
-    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(autoAimCommand);
-  
+    new JoystickButton(driverController, Button.kB.value).whileHeld(shooterCommand);
+    new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
+    new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(intakeCommand);
+    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(elevatorCommand);
     
   }
 
@@ -143,7 +128,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand()
   {
-    TrajectoryConfig config = new TrajectoryConfig(.25, .25).setKinematics(robotDrive.getKinematics());
+    TrajectoryConfig config = new TrajectoryConfig(.25, .25).setKinematics(driveSubsystem.getKinematics());
       
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(0, 0, new Rotation2d(0)), 
@@ -161,21 +146,21 @@ public class RobotContainer {
        
       RamseteCommand command = new RamseteCommand(
        trajectory,
-       robotDrive::getPose,
+       driveSubsystem::getPose,
        new RamseteController(2.0, 0.7),
-       robotDrive.getFeedfoward(),
-       robotDrive.getKinematics(),
-       robotDrive::getWheelSpeeds,
-       robotDrive.getLeftPIDController(),
-       robotDrive.getRightPIDController(),
-       robotDrive::setOutput,
-       robotDrive 
+       driveSubsystem.getFeedfoward(),
+       driveSubsystem.getKinematics(),
+       driveSubsystem::getWheelSpeeds,
+       driveSubsystem.getLeftPIDController(),
+       driveSubsystem.getRightPIDController(),
+       driveSubsystem::setOutput,
+       driveSubsystem 
       );
 
      
    
    //ramsete does not auto send a 0,0 to the output
-    return command.andThen(() -> robotDrive.setOutput(0,0));
+    return command.andThen(() -> driveSubsystem.setOutput(0,0));
      
   }
   // auto chooser for SD??

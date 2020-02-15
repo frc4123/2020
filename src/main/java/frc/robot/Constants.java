@@ -19,15 +19,15 @@ package frc.robot;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int LEFT_DRIVE_MASTER = 0;
+    public static final int LEFT_DRIVE_MASTER_CAN_ID = 0;
 
-    public static final int LEFT_DRIVE_SLAVE = 4;
+    public static final int LEFT_DRIVE_SLAVE_CAN_ID = 4;
 
-    public static final int RIGHT_DRIVE_MASTER = 1;
+    public static final int RIGHT_DRIVE_MASTER_CAN_ID = 1;
 
-    public static final int RIGHT_DRIVE_SLAVE = 3;
+    public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 3;
 
-    public static final double MOTOR_COMPENSATION_LEFT = .02;
+    public static final int ELEVATOR_MOTOR_CAN_ID = 6;
 
     // on right side so we reverse it if we put the encode on correct. disble if we
     // need to once we test
@@ -36,13 +36,13 @@ public final class Constants {
     public static final boolean RIGHT_ENCODER_REVERSED = true;
 
     //count per revolution
-    public static final int ENCODER_CPR = 4096;
+    public static final int MAG_ENCODER_CPR = 4096;
 
     // 1/4096
-    public static final double POSITION_FOR_ENCODER = 0.00024414062;
+    public static final double TICKS_TO_REVOLUTIOIN_MAG_ENCODER = 0.00024414062;
 
-    //10/4096
-    public static final double ANGULAR_VELOCITY_FOR_ENCODER = 0.00244140625;
+    //10 * (1/4096)
+    public static final double TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER = 0.00244140625;
 
     //this changes along with wear. remeasure at comp
     public static final double WHEEL_DIAMETER = 6.25;
@@ -50,15 +50,8 @@ public final class Constants {
     public static final double WHEEL_RADIUS = 3.125;
     
     //changes with gears. pinio>big gear * little gear>big botton gear = the value below
-	  public static final double GEAR_RATIO = 9.469;
 
-	public static final int INVERT_ENCODER = -1;
-  }
-
-  public static final class AutoConstants {
-    public static final double kAutoDriveDistanceInches = 60;
-    public static final double kAutoBackupDistanceInches = 20;
-    public static final double AUTO_DRIVE_MAX_SPEED = 0.5;
+  	public static final int INVERT_ENCODER = -1;
   }
 
   public static final class OIConstants {
@@ -76,6 +69,7 @@ public final class Constants {
   public static final class IntakeConstants {
     // victor
     public static final int INTAKE_MASTER = 2;
+    public static final double INTAKE_SPEED = 0.3;
   }
 
   public static final class XboxConstants {
@@ -114,9 +108,7 @@ public final class Constants {
     
   }
   public static final class PIDConstants{
-      public static final double PROPORTION = 9.31;
-      public static final double INTEGRAL = 0;
-      public static final double DERIVATIVE = 0;
+    
 
       public static final double KS_FEEDFOWARD = 1.1;
       public static final double KV_FEEDFOWARD = 0.329;
@@ -127,14 +119,35 @@ public final class Constants {
     }
 
   public static final class AutoAimConstants{
+
     public static final double KP_ROTATION_AUTOAIM = 0.025;
     public static final double KD_ROTATION_AUTOAIM = 0.0006;
     public static final double KF_AUTOAIM = 0.4;
 
-    public static final double ANGLE_TOLERANCE = 2.0; //FOR DEGREES 
+    public static final double ANGLE_TOLERANCE = 1.0; //FOR DEGREES 
     public static final double ANGLE_SETPOINT = 90.0; //Testing
     
   }
+  public static final class MiscConstants{
 
-public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 4;
+    public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 5;
+
+    public static final int PDP_CAN_ID = 0;
+	  public static final int PDP_CHANNEL_0 = 0;
+	  public static final int PDP_CHANNEL_1 = 1;
+	  public static final int PDP_CHANNEL_2 = 2;
+	  public static final int PDP_CHANNEL_3 = 3;
+	  public static final int PDP_CHANNEL_4 = 4;
+	  public static final int PDP_CHANNEL_5 = 5;
+	  public static final int PDP_CHANNEL_6 = 6;
+	  public static final int PDP_CHANNEL_7 = 7;
+    public static final int PDP_CHANNEL_8 = 8;
+    public static final int PDP_CHANNEL_9 = 9;
+    public static final int PDP_CHANNEL_10 = 10;
+    public static final int PDP_CHANNEL_11 = 11;
+	  public static final int PDP_CHANNEL_12 = 12;
+	  public static final int PDP_CHANNEL_13 = 13;
+	  public static final int PDP_CHANNEL_14 = 14;
+  }
+
 }

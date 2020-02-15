@@ -7,13 +7,11 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -27,36 +25,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.MiscConstants;
 import frc.robot.Constants.PIDConstants;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
-// Creating hardware
-  WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER);
-  WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE);
-  WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER);
-  WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE);   
 
-  // The robot's drive
+                                                  //** HARDWARE **\\
+
+  private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
+  private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
+  private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
+  private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);   
+  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+
   private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
-  // gyro
-  //if the gyro isn't recognized change the 0 to another number
-  ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+  private final PowerDistributionPanel Pdp = new PowerDistributionPanel(MiscConstants.PDP_CAN_ID);
 
+  
+                                                   //**TRAJECTORY**\\
   DifferentialDriveOdometry diffDriveOdo;
-  //Trajectory stuff
-  Pose2d pose;
-
   DifferentialDriveKinematics diffDriveKine = new DifferentialDriveKinematics(Units.inchesToMeters(25));
-
   SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
+  PIDController leftPIDController = new PIDController(9.31, 0, 4.51);
+  PIDController rightPIDController = new PIDController(9.31, 0, 4.51);
+  Pose2d pose;
  
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
-
+    leftMaster.configClosedloopRamp(1);
+    rightMaster.configClosedloopRamp(1);
+//check the ramp doesnt seem to work
     rightSlave.follow(rightMaster);
     leftSlave.follow(leftMaster);
 
@@ -96,13 +98,23 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return gyro.getAngle();
   }
 
+  /**
+   * Returns the current of the specified channel in Amps
+   * @param channel The channel of the pdp
+   * @return the current of the channel given
+   */
+  double getPDPCurent(int channel){
+    return  Pdp.getCurrent(channel);
+  }
+
+
   @Log
   public double getLeftPosition(){
 
     return
       //1 or 10?
       //get rid of magic numbers
-      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.POSITION_FOR_ENCODER  * 2
+      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  * 2
         * Math.PI * Units.inchesToMeters(DriveConstants.WHEEL_RADIUS);
 
   }
@@ -114,9 +126,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     // 1 or 10?
     // get rid of magic numbers
     //removedd the gear ratio because the position is is reading from the axel
-    rightMaster.getSelectedSensorPosition(0) * DriveConstants.POSITION_FOR_ENCODER * 2
+    rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER * 2
         * Math.PI * Units.inchesToMeters(DriveConstants.WHEEL_RADIUS);
 
+  }
+
+  public ADXRS450_Gyro getGyro(){
+    return gyro;
   }
 
   
@@ -126,8 +142,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
-  PIDController leftPIDController = new PIDController(9.31, 0, 4.51);
-  PIDController rightPIDController = new PIDController(9.31, 0, 4.51);
+
 
     /**
    * Resets the drive encoders to currently read a position of 0.
@@ -175,12 +190,12 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity(0)  * DriveConstants.ANGULAR_VELOCITY_FOR_ENCODER  * 2 * Math.PI *
-    Units.inchesToMeters(DriveConstants.WHEEL_RADIUS), rightMaster.getSelectedSensorVelocity(0)  * DriveConstants.ANGULAR_VELOCITY_FOR_ENCODER  * 2 * Math.PI *
+    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity(0)  * DriveConstants.INVERT_ENCODER* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER  * 2 * Math.PI *
+    Units.inchesToMeters(DriveConstants.WHEEL_RADIUS), rightMaster.getSelectedSensorVelocity(0)  * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER  * 2 * Math.PI *
     Units.inchesToMeters(DriveConstants.WHEEL_RADIUS));
   }
 
-  public DifferentialDriveKinematics getKinematics() {
+public DifferentialDriveKinematics getKinematics() {
 
     return diffDriveKine;
 }
@@ -196,16 +211,16 @@ public PIDController getRightPIDController(){
   return rightPIDController;
 
 }
-  /**
-   * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
-   *
-   * @param maxOutput the maximum output to which the drive will be constrained
-   */
-  public void setMaxOutput(double maxOutput) {
+/**
+ * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
+  *
+  * @param maxOutput the maximum output to which the drive will be constrained
+  */
+public void setMaxOutput(double maxOutput) {
 
     differentialDrive.setMaxOutput(maxOutput);
     
-  }
+}
 
   @Override
  public void periodic(){
@@ -220,6 +235,14 @@ public PIDController getRightPIDController(){
   SmartDashboard.putNumber("Gyro Heading", getHeading().getDegrees());
   SmartDashboard.getNumber("Gyro Setpoint", 0);
   SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
- }
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_0 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_1 , getPDPCurent(MiscConstants.PDP_CHANNEL_2));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_2 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_3 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_12 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_13, getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_14 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+  
+}
  
 }

@@ -7,10 +7,7 @@
 
 package frc.robot;
 
-// import java.io.IOException;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
@@ -23,14 +20,20 @@ import io.github.oblarg.oblog.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
+  
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+
+ 
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
 
   // private double startTime;
+
+  
+  
    
   @Override
   public void robotInit() {
@@ -62,6 +65,10 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     
     Logger.updateEntries();
+
+    
+    // @Log
+    // getPDPCurent(1);
     // SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
     // SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
 

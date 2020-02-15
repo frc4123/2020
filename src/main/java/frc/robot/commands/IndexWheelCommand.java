@@ -8,21 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterCommand extends CommandBase {
-
-  ShooterSubsystem shooterSubsystem;
-
+public class IndexWheelCommand extends CommandBase {
   /**
-   * Creates a new ShooterCommand.
+   * Creates a new HopperToShooterThingy.
    */
-
-  public ShooterCommand(ShooterSubsystem shooterSubsystem) {
+  public IndexWheelCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
-    
-    this.shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -44,5 +36,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+
   }
 }
+//change the name of the command class

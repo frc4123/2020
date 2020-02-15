@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 
@@ -20,26 +19,30 @@ public class AutoAngleCommand extends CommandBase {
    * Creates a new AutoAimCommand.
    */
 
-  NetworkTable table;
-  NetworkTableEntry targetX;
-  NetworkTableEntry targetY;
+  static double setpoint;
 
-  
+  double thePerticularChangeInAnglularPositionWeWouldLike;
 
   double rotationError;
   double distanceError;
   double rotationAdjust;
 
-  DriveSubsystem driveSubsytem;
+  NetworkTable table;
+  NetworkTableEntry targetX;
+  NetworkTableEntry targetY;
 
-  TurnToAngleCommand turnToAngle;
+
+  PIDCommandDebug debug;
+  DriveSubsystem driveSubsystem;
+
 
   public AutoAngleCommand(DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.driveSubsytem = driveSubsystem;
+    this.driveSubsystem = driveSubsystem;
     addRequirements(driveSubsystem);
 
-    turnToAngle = new TurnToAngleCommand(driveSubsystem);
+    // turnToAngle = new TurnToAngleCommand(driveSubsystem);
+    debug = new PIDCommandDebug(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -52,33 +55,41 @@ public class AutoAngleCommand extends CommandBase {
     targetY = table.getEntry("targetPitch");
 
     turnBasedOnCamera();
+
+    // setpoint = driveSubsystem.getGyroAngle() - 90;
+    // driveSubsystem.setVoltageCompensation(true, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
+    // super.initialize();
+   setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
     
   }
   
   private void turnBasedOnCamera(){
-    double cameraSetpoint = targetX.getDouble(0.0) * 0.7;
+    double cameraSetpoint = targetX.getDouble(0.0)
+    - (.2 *targetX.getDouble(0.0));
+    // 80 ppercent is pretty darn close offset
+    //offset is betwee 75 - 85
 
-    turnToAngle.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
-    CommandGroupBase.clearGroupedCommand(turnToAngle);
+    //maybe subtract an offset
+
+    debug.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
+    // turnToAngle.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
+   // CommandGroupBase.clearGroupedCommand(turnToAngle);
+  //  System.out.println("debug.schedule();");
     System.out.println("turnToAngle.schedule();");
     // turnToAngle.andThen(() -> {
     //   System.out.println("finished");
     //  }).schedule();
      
-     
-     turnToAngle.schedule();
-
-
-
-     
-
+    // debug.schedule();
+     debug.schedule();
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turnToAngle.cancel();
+    debug.cancel();
+    // turnToAngle.cancel();
   }
 
   // Returns true when the command should end.
