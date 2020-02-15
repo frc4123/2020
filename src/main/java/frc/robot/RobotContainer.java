@@ -106,7 +106,7 @@ public class RobotContainer {
    
 
     // 100 percent intake
-    new JoystickButton(driverController, Button.kB.value).whileHeld(shooterCommand);
+    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(shooterCommand);
     new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
     new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(intakeCommand);
     new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(elevatorCommand);
