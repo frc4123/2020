@@ -18,22 +18,38 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
    */
 
-  private final WPI_VictorSPX shooterMaster = new WPI_VictorSPX(ShooterConstants.SHOOTER_MASTER);
-  private final WPI_VictorSPX shooterSlave = new WPI_VictorSPX(ShooterConstants.SHOOTER_SLAVE);
+  private final WPI_VictorSPX shooterTop = new WPI_VictorSPX(ShooterConstants.SHOOTER_MASTER);
+  private final WPI_VictorSPX shooterBottom = new WPI_VictorSPX(ShooterConstants.SHOOTER_SLAVE);
 
-  private final SpeedControllerGroup shooterMotors = new SpeedControllerGroup(shooterMaster, shooterSlave);
+  private final SpeedControllerGroup shooterMotors = new SpeedControllerGroup(shooterTop, shooterBottom);
 
   public ShooterSubsystem() {
 
-    shooterSlave.setInverted(true);
+    shooterBottom.setInverted(true);
 
   }
 
-  public void shooterSpeed(double speed) {
+  public void shooterVoltage(double topVoltage, double bottomVoltage) {
 
-    shooterMotors.setVoltage(speed);
+    shooterTop.setVoltage(topVoltage);
+    shooterBottom.setVoltage(bottomVoltage);
 
   }
+
+  public void shooterVoltage(double voltage) {
+
+    shooterMotors.setVoltage(voltage);
+
+  }
+
+  public WPI_VictorSPX getShooterMaster(){
+    return shooterTop;
+  }
+
+  public WPI_VictorSPX getShooterSlave(){
+    return shooterBottom;
+  }
+
   /*
    * public double returnShooterSpeed() { return speed; }
    */

@@ -21,19 +21,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.AutoAngleCommand;
-import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
+import frc.robot.commands.IndexToShooter;
+import frc.robot.commands.IndexWheelCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -50,11 +54,16 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
 
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
   private final IntakeCommand intakeCommand = new IntakeCommand(intakeSubsystem); 
-  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevatorSubsystem);
+  private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
+  private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
   private final ShooterCommand shooterCommand = new ShooterCommand(shooterSubsystem);
+  private final IndexWheelCommand indexCommand = new IndexWheelCommand(hopperSubsystem);
+  private final IndexToShooter indexToShooterCommand = new IndexToShooter(hopperSubsystem,shooterSubsystem);
+
 
 
   // The driver's controller
@@ -65,6 +74,7 @@ public class RobotContainer {
   /**
    * Prints "Gyro is calibrating..." and calibrates the gyro.
    */
+  //put in robot init so it calibrates on turn on... maybe we want that?
   private void calibrate(){
     System.out.println("Gyro is calibrating...");
     driveSubsystem.getGyro().calibrate();
@@ -89,7 +99,7 @@ public class RobotContainer {
             driverController.getX(GenericHID.Hand.kRight)), driveSubsystem));
 
     shooterSubsystem.setDefaultCommand(new RunCommand(
-        () -> shooterSubsystem.shooterSpeed(driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS)),
+        () -> shooterSubsystem.shooterVoltage(driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS)),
         shooterSubsystem));
 
  
@@ -106,10 +116,12 @@ public class RobotContainer {
    
 
     // 100 percent intake
-    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(shooterCommand);
+    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeCommand);
     new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(intakeCommand);
-    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(elevatorCommand);
+    new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
+    //also can be one button pressed until the limit swtich is hit
+    new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
+    new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorDownCommand);
     
   }
 

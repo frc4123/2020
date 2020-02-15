@@ -8,12 +8,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
 
 public class IndexWheelCommand extends CommandBase {
+  
+  HopperSubsystem hopperSubsystem;
+  
+
   /**
    * Creates a new HopperToShooterThingy.
    */
-  public IndexWheelCommand() {
+  public IndexWheelCommand(HopperSubsystem hopperSubsystem) {
+    addRequirements(hopperSubsystem);
+    this.hopperSubsystem = hopperSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,11 +32,13 @@ public class IndexWheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    hopperSubsystem.hopperVoltage(3);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    hopperSubsystem.hopperVoltage(0);
   }
 
   // Returns true when the command should end.

@@ -39,12 +39,12 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
   private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);   
+  
   private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-
+  
   private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
-
+  
   private final PowerDistributionPanel Pdp = new PowerDistributionPanel(MiscConstants.PDP_CAN_ID);
-
   
                                                    //**TRAJECTORY**\\
   DifferentialDriveOdometry diffDriveOdo;
@@ -58,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     // Sets the distance per pulse for the encoders
     leftMaster.configClosedloopRamp(1);
     rightMaster.configClosedloopRamp(1);
-//check the ramp doesnt seem to work
+  //check the ramp doesnt seem to work
     rightSlave.follow(rightMaster);
     leftSlave.follow(leftMaster);
 
@@ -114,8 +114,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return
       //1 or 10?
       //get rid of magic numbers
-      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  * 2
-        * Math.PI * Units.inchesToMeters(DriveConstants.WHEEL_RADIUS);
+      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  
+        * Math.PI * (DriveConstants.WHEEL_DIAMETER_METERS);
 
   }
 
@@ -127,7 +127,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     // get rid of magic numbers
     //removedd the gear ratio because the position is is reading from the axel
     rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER * 2
-        * Math.PI * Units.inchesToMeters(DriveConstants.WHEEL_RADIUS);
+        * Math.PI * (DriveConstants.WHEEL_DIAMETER_METERS);
 
   }
 
@@ -189,34 +189,62 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     rightMaster.enableVoltageCompensation(isEnabled);
   }
 
+ 
+  /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity(0)  * DriveConstants.INVERT_ENCODER* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER  * 2 * Math.PI *
-    Units.inchesToMeters(DriveConstants.WHEEL_RADIUS), rightMaster.getSelectedSensorVelocity(0)  * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER  * 2 * Math.PI *
-    Units.inchesToMeters(DriveConstants.WHEEL_RADIUS));
+
+    return new DifferentialDriveWheelSpeeds(getLeftWheelSpeed() ,getrightWheelSpeed());
+
   }
 
-public DifferentialDriveKinematics getKinematics() {
+   /**
+  * Returns the left wheel speed in meters per second
+  * @return left wheel speed in meters per second
+  */  
+  public double getLeftWheelSpeed() {
+
+    return leftMaster.getSelectedSensorVelocity(0)  *DriveConstants.INVERT_ENCODER* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
+
+  }
+
+   /**
+   * Returns the right wheel speed in meters per second
+   * 
+   * @return right wheel speed in meters per second
+   */
+  public double getrightWheelSpeed() {
+
+    return rightMaster.getSelectedSensorVelocity(0)  * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER
+        * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
+
+  }
+
+  public DifferentialDriveKinematics getKinematics() {
 
     return diffDriveKine;
 }
 
-public PIDController getLeftPIDController(){
+  public PIDController getLeftPIDController(){
 
   return leftPIDController;
 
 }
 
-public PIDController getRightPIDController(){
+  public PIDController getRightPIDController(){
 
   return rightPIDController;
 
 }
-/**
+  /**
  * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
   *
   * @param maxOutput the maximum output to which the drive will be constrained
   */
-public void setMaxOutput(double maxOutput) {
+  public void setMaxOutput(double maxOutput) {
 
     differentialDrive.setMaxOutput(maxOutput);
     

@@ -44,14 +44,13 @@ public final class Constants {
     //10 * (1/4096)
     public static final double TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER = 0.00244140625;
 
-    //this changes along with wear. remeasure at comp
-    public static final double WHEEL_DIAMETER = 6.25;
+   	public static final int INVERT_ENCODER = -1;
 
-    public static final double WHEEL_RADIUS = 3.125;
+    public static final double  TRACK_WIDTH_METERS = 0.635;
+
+    public static final double WHEEL_DIAMETER_METERS = 0.16;
     
-    //changes with gears. pinio>big gear * little gear>big botton gear = the value below
-
-  	public static final int INVERT_ENCODER = -1;
+    public static boolean isGyroReversed = true;
   }
 
   public static final class OIConstants {
@@ -69,7 +68,12 @@ public final class Constants {
   public static final class IntakeConstants {
     // victor
     public static final int INTAKE_MASTER = 2;
-    public static final double INTAKE_SPEED = 0.3;
+    // public static final double INTAKE_SPEED = 0.3;
+  }
+
+  public static final class HopperConstants {
+    //victor
+    public static final int HOPPER_MASTER = 5;
   }
 
   public static final class XboxConstants {
@@ -110,7 +114,7 @@ public final class Constants {
   public static final class PIDConstants{
     
 
-      public static final double KS_FEEDFOWARD = 1.1;
+      public static final double KS_FEEDFOWARD = 1.2;
       public static final double KV_FEEDFOWARD = 0.329;
       public static final double KA_FEEDFOWARD = 0.0933; 
       public static final double OPTIMAL_KP = 9.31;
@@ -148,6 +152,11 @@ public final class Constants {
 	  public static final int PDP_CHANNEL_12 = 12;
 	  public static final int PDP_CHANNEL_13 = 13;
 	  public static final int PDP_CHANNEL_14 = 14;
+
+  public static final int ELEVATOR_HIGH_SWTICH = 0;
+  public static final int ELEVATOR_LOW_SWITCH = 1;
+
+public static final int ELEVATOR_HIGH_SWITCH = 0;
   }
 
 }

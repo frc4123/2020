@@ -23,8 +23,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMaster.setInverted(false);
   }
 
-  public void intakeSpeed(double speed){
-    intakeMaster.set(speed);
+  public void intakeVoltage(double voltage){
+    intakeMaster.setVoltage(voltage);
   }
 
 }

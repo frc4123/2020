@@ -7,12 +7,17 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.HopperConstants;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class HopperSubsystem extends SubsystemBase {
   /**
    * Creates a new HopperSubsystem.
    */
+  private final WPI_VictorSPX hopperMaster = new WPI_VictorSPX(HopperConstants.HOPPER_MASTER);
   public HopperSubsystem() {
 
   }
@@ -20,5 +25,10 @@ public class HopperSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  @Log
+  public void hopperVoltage(double voltage){
+    hopperMaster.setVoltage(voltage);
   }
 }

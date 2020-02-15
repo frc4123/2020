@@ -10,11 +10,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorCommand extends CommandBase {
+public class ElevatorUpCommand extends CommandBase {
   
-
   ElevatorSubsystem elevatorSubsystem;
-  public ElevatorCommand(ElevatorSubsystem elevatorSubsystem) {
+
+  public ElevatorUpCommand(ElevatorSubsystem elevatorSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevatorSubsystem);
     this.elevatorSubsystem = elevatorSubsystem;
@@ -30,8 +30,15 @@ public class ElevatorCommand extends CommandBase {
   public void execute() {
     elevatorSubsystem.setVoltage(3);
   }
-@Override
-public void end(boolean interrupted) {
+
+  
+  @Override
+  public void end(boolean interrupted) {
   elevatorSubsystem.setVoltage(0);
-}
+ }
+ @Override
+ public boolean isFinished() {
+   //assumes normaly closed? 
+   return elevatorSubsystem.isLimitTopSwitchHit();
+ }
 }
