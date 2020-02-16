@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
   /**
    * Creates a new IntakeSubsystem.
    */
-  private final WPI_VictorSPX intakeMaster = new WPI_VictorSPX(IntakeConstants.INTAKE_MASTER);
+  private final WPI_TalonSRX intakeMaster = new WPI_TalonSRX(IntakeConstants.INTAKE_MASTER);
 
   public IntakeSubsystem() {
     //if it is pushing it out with a positive value change this 

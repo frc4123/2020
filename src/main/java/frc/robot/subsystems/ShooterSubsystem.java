@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -18,8 +19,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
    */
 
-  private final WPI_VictorSPX shooterTop = new WPI_VictorSPX(ShooterConstants.SHOOTER_MASTER);
-  private final WPI_VictorSPX shooterBottom = new WPI_VictorSPX(ShooterConstants.SHOOTER_SLAVE);
+  private final WPI_TalonSRX shooterTop = new WPI_TalonSRX(ShooterConstants.SHOOTER_MASTER);
+  private final WPI_TalonSRX shooterBottom = new WPI_TalonSRX(ShooterConstants.SHOOTER_SLAVE);
 
   private final SpeedControllerGroup shooterMotors = new SpeedControllerGroup(shooterTop, shooterBottom);
 
@@ -42,11 +43,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
-  public WPI_VictorSPX getShooterMaster(){
+  public WPI_TalonSRX getShooterMaster(){
     return shooterTop;
   }
 
-  public WPI_VictorSPX getShooterSlave(){
+  public WPI_TalonSRX getShooterSlave(){
     return shooterBottom;
   }
 

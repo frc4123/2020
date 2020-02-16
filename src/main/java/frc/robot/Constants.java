@@ -59,9 +59,9 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    // victor
-    public static final int SHOOTER_MASTER = 0;
-    public static final int SHOOTER_SLAVE = 1;
+    // talon
+    public static final int SHOOTER_MASTER = 7;
+    public static final int SHOOTER_SLAVE = 8;
 
   }
 
