@@ -33,6 +33,7 @@ import frc.robot.commands.ElevatorUpCommand;
 // import frc.robot.commands.IndexToShooter;
 // import frc.robot.commands.IndexWheelCommand;
 import frc.robot.commands.IntakeInCommand;
+import frc.robot.commands.IntakeOutCommand;
 import frc.robot.commands.IntakeGateDownCommand;
 import frc.robot.commands.IntakeGateUpCommand;
 import frc.robot.commands.ShooterCommand;
@@ -62,7 +63,6 @@ public class RobotContainer {
   // private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
 
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
-  private final IntakeInCommand intakeCommand = new IntakeInCommand(intakeSubsystem); 
   private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
   private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
   private final ShooterCommand shooterCommand = new ShooterCommand(shooterSubsystem);
@@ -70,6 +70,8 @@ public class RobotContainer {
   private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
   private final IntakeGateDownCommand intakeGateDownCommand = new IntakeGateDownCommand(intakeSubsystem);
   private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
+  private final IntakeInCommand intakeInCommand = new IntakeInCommand(intakeSubsystem);
+  private final IntakeOutCommand intakeOutCommand = new IntakeOutCommand(intakeSubsystem);
   //private final IndexWheelCommand indexCommand = new IndexWheelCommand(hopperSubsystem);
   //private final IndexToShooter indexToShooterCommand = new IndexToShooter(hopperSubsystem,shooterSubsystem);
 
@@ -121,9 +123,10 @@ public class RobotContainer {
    
 
     
-    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeCommand);
+    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeInCommand);
+    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
+    //new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
 
     //also can be one button pressed until the limit swtich is hit
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
