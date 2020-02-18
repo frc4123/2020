@@ -10,10 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.HopperSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.IndexWheelCommand;
-import frc.robot.commands.IntakeCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

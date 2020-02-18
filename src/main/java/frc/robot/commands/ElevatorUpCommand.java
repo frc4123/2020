@@ -30,12 +30,10 @@ public class ElevatorUpCommand extends CommandBase {
   public void execute() {
     elevatorSubsystem.setVoltage(3);
   }
-
   
   @Override
   public void end(boolean interrupted) {
-  elevatorSubsystem.setVoltage(0);
- }
+  }
  @Override
  public boolean isFinished() {
    //assumes normaly closed? 

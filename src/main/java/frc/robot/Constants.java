@@ -18,16 +18,18 @@ package frc.robot;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static final class DriveConstants {
-    public static final int LEFT_DRIVE_MASTER_CAN_ID = 0;
 
-    public static final int LEFT_DRIVE_SLAVE_CAN_ID = 4;
+    public static final int LEFT_DRIVE_MASTER_CAN_ID = 1;
 
-    public static final int RIGHT_DRIVE_MASTER_CAN_ID = 1;
+    public static final int LEFT_DRIVE_SLAVE_CAN_ID = 2;
 
-    public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 3;
+    public static final int RIGHT_DRIVE_MASTER_CAN_ID = 3;
 
-    public static final int ELEVATOR_MOTOR_CAN_ID = 6;
+    public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 4;
+
+    
 
     // on right side so we reverse it if we put the encode on correct. disble if we
     // need to once we test
@@ -60,20 +62,27 @@ public final class Constants {
 
   public static final class ShooterConstants {
     // talon
-    public static final int SHOOTER_MASTER = 7;
-    public static final int SHOOTER_SLAVE = 8;
+    public static final int SHOOTER_MASTER_CAN_ID = 7;
+    public static final int SHOOTER_SLAVE_CAN_ID = 8;
 
   }
-
+  public static final class WinchConstants{
+    public static final int WINCH_MASTER_CAN_ID = 9;
+    public static final int WINCH_SLAVE_CAN_ID = 10;
+  }
+  public static final class ElevatorConstants {
+    public static final int ELEVATOR_MOTOR_CAN_ID = 6;
+  }
   public static final class IntakeConstants {
     // victor
-    public static final int INTAKE_MASTER = 2;
-    // public static final double INTAKE_SPEED = 0.3;
+    public static final int INTAKE_ROLLER_CAN_ID = 2;
+	  public static final int INTAKE_GATE_CAN_ID = 6;
+    	
   }
 
   public static final class HopperConstants {
     //victor
-    public static final int HOPPER_MASTER = 5;
+    public static final int HOPPER_MASTER_CAN_ID = 5;
   }
 
   public static final class XboxConstants {
@@ -151,12 +160,11 @@ public final class Constants {
     public static final int PDP_CHANNEL_11 = 11;
 	  public static final int PDP_CHANNEL_12 = 12;
 	  public static final int PDP_CHANNEL_13 = 13;
-	  public static final int PDP_CHANNEL_14 = 14;
+    public static final int PDP_CHANNEL_14 = 14;
+    
+    public static final int ELEVATOR_LOW_SWITCH = 1;
 
-  public static final int ELEVATOR_HIGH_SWTICH = 0;
-  public static final int ELEVATOR_LOW_SWITCH = 1;
-
-public static final int ELEVATOR_HIGH_SWITCH = 0;
+   public static final int ELEVATOR_HIGH_SWITCH = 0;
   }
 
 }

@@ -53,7 +53,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   PIDController leftPIDController = new PIDController(9.31, 0, 4.51);
   PIDController rightPIDController = new PIDController(9.31, 0, 4.51);
   Pose2d pose;
- 
+
+
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
     leftMaster.configClosedloopRamp(1);
@@ -70,8 +71,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    diffDriveOdo = new DifferentialDriveOdometry(getHeading());
 
   }
-
- 
+//    public void initDefaultCommand() {
+//      // Set the default command for a subsystem here.
+//      setDefaultCommand(new DriveWithJoystickCommand(DriveSubsystem));
+//  }
 
   /**
    * Drives the robot using arcade controls.

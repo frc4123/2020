@@ -8,43 +8,38 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ElevatorDownCommand extends CommandBase {
+public class IntakeGateUpCommand extends CommandBase {
   
-  ElevatorSubsystem elevatorSubsystem;
+  IntakeSubsystem intakeSubsystem;
 
-  public ElevatorDownCommand(ElevatorSubsystem elevatorSubsystem) {
+  public IntakeGateUpCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevatorSubsystem);
-    this.elevatorSubsystem = elevatorSubsystem;
+    addRequirements(intakeSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-}
+  }
 
-// Called every time the scheduler runs while the command is scheduled.
-@Override
-public void execute() {
-  
-  elevatorSubsystem.setVoltage(-3);
-
-
-  
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    intakeSubsystem.setIntakeGateVoltage(8.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // elevatorSubsystem.setVoltage(0);
-    
+    intakeSubsystem.setIntakeGateVoltage(0.);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevatorSubsystem.isBottomLimitSwitchHit();
+    return false;
   }
 }

@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -21,8 +20,8 @@ public class ShooterCommand extends CommandBase {
 
   public ShooterCommand(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    SmartDashboard.putNumber("shooter_top", 3);
-    SmartDashboard.putNumber("shooter_bottom", 3);
+    // SmartDashboard.putNumber("shooter_top", 3);
+    // SmartDashboard.putNumber("shooter_bottom", 3);
 
 
 
@@ -36,10 +35,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    shooterSubsystem.shooterVoltage(SmartDashboard.getNumber("shooter_top", 0), SmartDashboard.getNumber("shooter_bottom", 0));
-  }
+ 
 
   // Called once the command ends or is interrupted.
   @Override

@@ -8,9 +8,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -19,10 +16,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
    */
 
-  private final WPI_TalonSRX shooterTop = new WPI_TalonSRX(ShooterConstants.SHOOTER_MASTER);
-  private final WPI_TalonSRX shooterBottom = new WPI_TalonSRX(ShooterConstants.SHOOTER_SLAVE);
-
-  private final SpeedControllerGroup shooterMotors = new SpeedControllerGroup(shooterTop, shooterBottom);
+  private final WPI_TalonSRX shooterTop = new WPI_TalonSRX(ShooterConstants.SHOOTER_MASTER_CAN_ID);
+  private final WPI_TalonSRX shooterBottom = new WPI_TalonSRX(ShooterConstants.SHOOTER_SLAVE_CAN_ID);
 
   public ShooterSubsystem() {
 
@@ -30,29 +25,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
-  public void shooterVoltage(double topVoltage, double bottomVoltage) {
+ public void setTopShooterMotor(double voltage) {
 
-    shooterTop.setVoltage(topVoltage);
-    shooterBottom.setVoltage(bottomVoltage);
+  shooterTop.setVoltage(voltage);
+   
+ }
 
-  }
+ public void setBottomShooterMotor(double voltage) {
 
-  public void shooterVoltage(double voltage) {
+  shooterBottom.setVoltage(voltage);
 
-    shooterMotors.setVoltage(voltage);
+ }
 
-  }
-
-  public WPI_TalonSRX getShooterMaster(){
-    return shooterTop;
-  }
-
-  public WPI_TalonSRX getShooterSlave(){
-    return shooterBottom;
-  }
-
-  /*
-   * public double returnShooterSpeed() { return speed; }
-   */
+  
 
 }

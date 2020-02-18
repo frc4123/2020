@@ -25,21 +25,25 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.AutoAngleCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
-import frc.robot.commands.IndexToShooter;
-import frc.robot.commands.IndexWheelCommand;
-import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.IndexToShooter;
+// import frc.robot.commands.IndexWheelCommand;
+import frc.robot.commands.IntakeInCommand;
+import frc.robot.commands.IntakeGateDownCommand;
+import frc.robot.commands.IntakeGateUpCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.WinchDownCommand;
+import frc.robot.commands.WinchUpCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HopperSubsystem;
+// import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.WinchSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -54,15 +58,20 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
+  private final WinchSubsystem winchSubsystem = new WinchSubsystem();
+  // private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
 
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
-  private final IntakeCommand intakeCommand = new IntakeCommand(intakeSubsystem); 
+  private final IntakeInCommand intakeCommand = new IntakeInCommand(intakeSubsystem); 
   private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
   private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
   private final ShooterCommand shooterCommand = new ShooterCommand(shooterSubsystem);
-  private final IndexWheelCommand indexCommand = new IndexWheelCommand(hopperSubsystem);
-  private final IndexToShooter indexToShooterCommand = new IndexToShooter(hopperSubsystem,shooterSubsystem);
+  private final WinchDownCommand winchDownCommand = new WinchDownCommand(winchSubsystem);
+  private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
+  private final IntakeGateDownCommand intakeGateDownCommand = new IntakeGateDownCommand(intakeSubsystem);
+  private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
+  //private final IndexWheelCommand indexCommand = new IndexWheelCommand(hopperSubsystem);
+  //private final IndexToShooter indexToShooterCommand = new IndexToShooter(hopperSubsystem,shooterSubsystem);
 
 
 
@@ -98,10 +107,6 @@ public class RobotContainer {
         .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
             driverController.getX(GenericHID.Hand.kRight)), driveSubsystem));
 
-    shooterSubsystem.setDefaultCommand(new RunCommand(
-        () -> shooterSubsystem.shooterVoltage(driverController.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS)),
-        shooterSubsystem));
-
  
   }
 
@@ -115,13 +120,19 @@ public class RobotContainer {
   
    
 
-    // 100 percent intake
+    
     new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeCommand);
     new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
     new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
+
     //also can be one button pressed until the limit swtich is hit
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
     new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorDownCommand);
+    //
+    new JoystickButton(auxDriverController, XboxConstants.X_BUTTON).whileHeld(intakeGateDownCommand);
+    new JoystickButton(auxDriverController, XboxConstants.Y_BUTTON).whileHeld(intakeGateUpCommand);
+    new JoystickButton(auxDriverController, XboxConstants.A_BUTTON).whileHeld(winchDownCommand);
+    new JoystickButton(auxDriverController, XboxConstants.B_BUTTON).whileHeld(winchUpCommand);
     
   }
 

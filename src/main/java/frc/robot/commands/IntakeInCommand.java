@@ -10,13 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCommand extends CommandBase {
+public class IntakeInCommand extends CommandBase {
   /**
    * Creates a new IntakeCommand.
    */
   private final IntakeSubsystem intakeSubsystem;
   
-  public IntakeCommand(IntakeSubsystem intakeSubsystem) {
+  public IntakeInCommand(IntakeSubsystem intakeSubsystem) {
      addRequirements(intakeSubsystem);
      this.intakeSubsystem = intakeSubsystem;
   }
@@ -29,14 +29,13 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.intakeVoltage(3);
+    intakeSubsystem.setIntakeRollerVoltage(6);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.intakeVoltage(0);
-
+    intakeSubsystem.setIntakeRollerVoltage(0);
   }
 
   // Returns true when the command should end.

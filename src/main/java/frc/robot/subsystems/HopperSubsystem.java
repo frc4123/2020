@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,9 +18,10 @@ public class HopperSubsystem extends SubsystemBase {
   /**
    * Creates a new HopperSubsystem.
    */
-  private final WPI_VictorSPX hopperMaster = new WPI_VictorSPX(HopperConstants.HOPPER_MASTER);
-  public HopperSubsystem() {
+  private final WPI_VictorSPX hopperMaster = new WPI_VictorSPX(HopperConstants.HOPPER_MASTER_CAN_ID);
 
+  public HopperSubsystem() {
+    hopperMaster.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
