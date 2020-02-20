@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.DriveSubsystem;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -16,21 +17,23 @@ import frc.robot.commands.IndexWheelCommand;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class IndexToShooter extends ParallelCommandGroup{
+public class ShooterSequenceCommand extends ParallelCommandGroup{
   /**
    * Creates a new IndexToShooter.
  * @param shooterSubsystem
  * @param hopperSubsystem
    */
-
-
+//, is sequential ; is parallel
+// auto aim, spin up, index;shooter, index;shooter
 // IndexWheelCommand indexWheelCommand = new IndexWheelCommand(hopperSubsystem);
 // IntakeCommand intakeCommand = new IntakeCommand(intakeSubsystem);
 
-  public IndexToShooter(HopperSubsystem hopperSubsystem, ShooterSubsystem shooterSubsystem) {
+  public ShooterSequenceCommand(DriveSubsystem driveSubsystem, HopperSubsystem hopperSubsystem, ShooterSubsystem shooterSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
+      new AutoAngleCommand(driveSubsystem),
+      
       new ShooterCommand(shooterSubsystem).withTimeout(0.5),
 
       new IndexWheelCommand(hopperSubsystem)

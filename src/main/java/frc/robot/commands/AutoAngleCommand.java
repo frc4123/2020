@@ -13,7 +13,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-
 public class AutoAngleCommand extends CommandBase {
   /**
    * Creates a new AutoAimCommand.
@@ -31,10 +30,8 @@ public class AutoAngleCommand extends CommandBase {
   NetworkTableEntry targetX;
   NetworkTableEntry targetY;
 
-
   PIDCommandDebug debug;
   DriveSubsystem driveSubsystem;
-
 
   public AutoAngleCommand(DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -57,37 +54,37 @@ public class AutoAngleCommand extends CommandBase {
     turnBasedOnCamera();
 
     // setpoint = driveSubsystem.getGyroAngle() - 90;
-    // driveSubsystem.setVoltageCompensation(true, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
+    // driveSubsystem.setVoltageCompensation(true,
+    // Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
     // super.initialize();
-   setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
-    
-  }
-  
-  private void turnBasedOnCamera(){
-    double cameraSetpoint = targetX.getDouble(0.0)
-    - (.2 *targetX.getDouble(0.0));
-    // 80 ppercent is pretty darn close offset
-    //offset is betwee 75 - 85
+    setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
 
-    //maybe subtract an offset
+  }
+
+  private void turnBasedOnCamera() {
+    double cameraSetpoint = targetX.getDouble(0.0) - (.2 * targetX.getDouble(0.0));
+    // 80 ppercent is pretty darn close offset
+    // offset is betwee 75 - 85
+
+    // maybe subtract an offset
 
     debug.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
-    // turnToAngle.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
-   // CommandGroupBase.clearGroupedCommand(turnToAngle);
-  //  System.out.println("debug.schedule();");
+
+    // CommandGroupBase.clearGroupedCommand(turnToAngle);
+    // System.out.println("debug.schedule();");
     System.out.println("turnToAngle.schedule();");
     // turnToAngle.andThen(() -> {
-    //   System.out.println("finished");
-    //  }).schedule();
-     
-    // debug.schedule();
-     debug.schedule();
+    // System.out.println("finished");
+    // }).schedule();
+
+    debug.schedule();
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+
     debug.cancel();
     // turnToAngle.cancel();
   }

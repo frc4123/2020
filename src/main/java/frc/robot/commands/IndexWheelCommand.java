@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.HopperSubsystem;
 
 public class IndexWheelCommand extends CommandBase {
@@ -32,13 +33,15 @@ public class IndexWheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hopperSubsystem.hopperVoltage(3);
+    System.out.println("hopper 3 volt");
+    hopperSubsystem.hopperVoltage(VoltageConstants.HOPPER_VOLTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hopperSubsystem.hopperVoltage(0);
+    hopperSubsystem.hopperVoltage(VoltageConstants.HOPPER_STOP);
+    System.out.println("hopper done");
   }
 
   // Returns true when the command should end.

@@ -21,6 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     //if it is pushing it out with a positive value change this 
+    intakeRoller.configOpenloopRamp(.3);
     intakeRoller.setInverted(false);
     intakeGate.setNeutralMode(NeutralMode.Brake);
   }

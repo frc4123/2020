@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.WinchSubsystem;
 
 public class WinchUpCommand extends CommandBase {
@@ -28,13 +29,13 @@ public class WinchUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    winchSubsystem.setWinchMotorVoltage(12.0);
+    winchSubsystem.setWinchMotorVoltage(VoltageConstants.WINCHUP);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    winchSubsystem.setWinchMotorVoltage(0);
+    winchSubsystem.setWinchMotorVoltage(VoltageConstants.WINCHUP_STOP);
   }
 
   // Returns true when the command should end.

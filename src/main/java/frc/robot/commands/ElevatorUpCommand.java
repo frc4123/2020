@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorUpCommand extends CommandBase {
@@ -28,15 +29,19 @@ public class ElevatorUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevatorSubsystem.setVoltage(3);
+    System.out.println("elevator 3 volt");
+    elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP);
   }
   
   @Override
   public void end(boolean interrupted) {
+    System.out.println("elevator done");
+    elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP_STOP);
   }
  @Override
  public boolean isFinished() {
    //assumes normaly closed? 
-   return elevatorSubsystem.isLimitTopSwitchHit();
+   return false;
+   // elevatorSubsystem.isLimitTopSwitchHit();
  }
 }

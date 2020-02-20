@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeGateDownCommand extends CommandBase {
@@ -29,12 +30,14 @@ public class IntakeGateDownCommand extends CommandBase {
   @Override
   public void execute() {
     //go slower when going down
-    intakeSubsystem.setIntakeGateVoltage(-4.0);
+    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKEGATE_DOWN);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKEGATE_DOWN_STOP);
+
   }
 
   // Returns true when the command should end.

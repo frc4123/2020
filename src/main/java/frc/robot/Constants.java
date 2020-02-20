@@ -71,18 +71,18 @@ public final class Constants {
     public static final int WINCH_SLAVE_CAN_ID = 10;
   }
   public static final class ElevatorConstants {
-    public static final int ELEVATOR_MOTOR_CAN_ID = 6;
+    public static final int ELEVATOR_MOTOR_CAN_ID = 11;// should be 11
   }
   public static final class IntakeConstants {
     // victor
-    public static final int INTAKE_ROLLER_CAN_ID = 2;
+    public static final int INTAKE_ROLLER_CAN_ID = 5;
 	  public static final int INTAKE_GATE_CAN_ID = 6;
     	
   }
 
   public static final class HopperConstants {
     //victor
-    public static final int HOPPER_MASTER_CAN_ID = 5;
+    public static final int HOPPER_MASTER_CAN_ID = 0;// needs to be reassinged
   }
 
   public static final class XboxConstants {
@@ -165,6 +165,36 @@ public final class Constants {
     public static final int ELEVATOR_LOW_SWITCH = 1;
 
    public static final int ELEVATOR_HIGH_SWITCH = 0;
+  }
+
+  public static final class PS4ButtonConstants {
+
+    // Button mappings
+    static public int X_BUTTON = 1;
+    static public int O_BUTTON = 2;
+    static public int SQUARE_BUTTON = 3;
+    static public int TRIANGLE_BUTTON = 4;
+  }
+
+  public static final class VoltageConstants{
+
+	public static final double STOP = 0;
+	public static final double HOPPER_VOLTAGE = 3.0;
+	public static final double ELEVATOR_DOWN = 1.0;
+	public static final double ELEVATOR_UP = 3;
+	public static final double ELEVATOR_UP_STOP = 0;
+	public static final double HOPPER_STOP = 0;
+	public static final double INTAKEGATE_DOWN = 2.0;
+	public static final double INTAKEGATE_DOWN_STOP = 0;
+	public static final double _INTAKE_UP_DIFFERENT = -5.0;
+	public static final double INTAKEGATEUP_STOP = 0;
+	public static final double WINCHDOWN = -4.0;
+	public static final double WINCHDOWN_STOP = 0;
+	public static final double WINCHUP = 12.0;
+	public static final double WINCHUP_STOP = 0;
+
+
+
   }
 
 }

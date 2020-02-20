@@ -127,6 +127,14 @@ public class RobotContainer {
     new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(autoAimCommand);
     //new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
+    //give elevator to aux. make intake roller triggers. make 
+    //driver
+    //    triggers -> intake roller
+    //    bumpers -> winch
+    //    x is auto aim
+    //    intake gate square and triangle
+    //aux
+    //    manual shoot ->  
 
     //also can be one button pressed until the limit swtich is hit
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);

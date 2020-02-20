@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorDownCommand extends CommandBase {
@@ -29,15 +30,17 @@ public class ElevatorDownCommand extends CommandBase {
 @Override
 public void execute() {
   
-  elevatorSubsystem.setVoltage(-3);
-
-
+  System.out.println("voltage elevator -3");
+  elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_DOWN);
   
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+     System.out.println("elevator done");
+     elevatorSubsystem.setVoltage(VoltageConstants.STOP);
+   
     // elevatorSubsystem.setVoltage(0);
     
   }
@@ -45,6 +48,7 @@ public void execute() {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevatorSubsystem.isBottomLimitSwitchHit();
+    return false; 
+    //elevatorSubsystem.isBottomLimitSwitchHit();
   }
 }
