@@ -29,13 +29,13 @@ public class WinchUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    winchSubsystem.setWinchMotorVoltage(VoltageConstants.WINCHUP);
+    winchSubsystem.setWinchMotorVoltage(VoltageConstants.WINCH_UP_VOLTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    winchSubsystem.setWinchMotorVoltage(VoltageConstants.WINCHUP_STOP);
+    winchSubsystem.setWinchMotorVoltage(VoltageConstants.STOP);
   }
 
   // Returns true when the command should end.

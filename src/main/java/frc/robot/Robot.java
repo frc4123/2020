@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
@@ -97,7 +98,7 @@ public class Robot extends TimedRobot {
     // robotContainer.robotDrive resetEncoders();
   
       autonomousCommand = robotContainer.getAutonomousCommand();
-  
+      robotContainer.getDriveSubsystem().resetOdometry(new Pose2d());
       // schedule the autonomous command (example)
       //prevents doing things to a null object so robot dont go bye bye
       if (autonomousCommand != null) {

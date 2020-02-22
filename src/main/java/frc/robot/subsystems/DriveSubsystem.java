@@ -18,18 +18,17 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+// import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
+// import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MiscConstants;
 import frc.robot.Constants.PIDConstants;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
-//TODO add volt ramp
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
 
@@ -40,18 +39,18 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
   private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);   
   
-  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-  
   private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
+  
+  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
   
   private final PowerDistributionPanel Pdp = new PowerDistributionPanel(MiscConstants.PDP_CAN_ID);
   
                                                    //**TRAJECTORY**\\
-  DifferentialDriveOdometry diffDriveOdo;
-  DifferentialDriveKinematics diffDriveKine = new DifferentialDriveKinematics(Units.inchesToMeters(25));
+  DifferentialDriveOdometry odometry;
+  
   SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
-  PIDController leftPIDController = new PIDController(9.31, 0, 4.51);
-  PIDController rightPIDController = new PIDController(9.31, 0, 4.51);
+  PIDController leftPIDController = new PIDController(4, 0, 4.51);
+  PIDController rightPIDController = new PIDController(4, 0, 4.51);
   Pose2d pose;
 
 
@@ -68,13 +67,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     resetEncoders();
 
-   diffDriveOdo = new DifferentialDriveOdometry(getHeading());
+   odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
   }
-//    public void initDefaultCommand() {
-//      // Set the default command for a subsystem here.
-//      setDefaultCommand(new DriveWithJoystickCommand(DriveSubsystem));
-//  }
+
 
   /**
    * Drives the robot using arcade controls.
@@ -84,15 +80,16 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void arcadeDrive(double fwd, double rot) {
 
-    //set to true so it is less sensitive at lower speeds
-    differentialDrive.arcadeDrive(fwd, rot); //(fwd, rot, true);
+    differentialDrive.arcadeDrive(fwd, rot); 
+    differentialDrive.feed();
 
   }
 
-  public Rotation2d getHeading() {
+  public double getHeading() {
 
     //negative because of the unit circle
-    return Rotation2d.fromDegrees(-gyro.getAngle());
+    //IEEEremainder is pretty much just modulo
+    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.IS_GYRO_REVERSED ? -1.0 : 1.0);
 
     }
 
@@ -100,6 +97,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public double getGyroAngle(){
     return gyro.getAngle();
   }
+     
+  public ADXRS450_Gyro getGyro(){
+      return gyro;
+    }
 
   /**
    * Returns the current of the specified channel in Amps
@@ -110,33 +111,35 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return  Pdp.getCurrent(channel);
   }
 
-
+  /**
+   *  Returns the left wheel's position in meters
+   * @return Wheel position in meters
+   */
   @Log
   public double getLeftPosition(){
 
     return
       //1 or 10?
       //get rid of magic numbers
-      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT_ENCODER * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  
-        * Math.PI * (DriveConstants.WHEEL_DIAMETER_METERS);
+      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  
+        * DriveConstants.WHEEL_CIRCUMFERENCE_METERS;
 
   }
 
+   /**
+   *  Returns the right wheel's position in meters
+   * @return Wheel position in meters
+   */
   @Log
   public double getRightPosition() {
 
     return
-    // 1 or 10?
-    // get rid of magic numbers
     //removedd the gear ratio because the position is is reading from the axel
-    rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER * 2
-        * Math.PI * (DriveConstants.WHEEL_DIAMETER_METERS);
+    rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER 
+        * DriveConstants.WHEEL_CIRCUMFERENCE_METERS;
 
   }
 
-  public ADXRS450_Gyro getGyro(){
-    return gyro;
-  }
 
   
   public SimpleMotorFeedforward getFeedfoward() {
@@ -145,7 +148,17 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
 
+    resetEncoders();
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+
+  }
 
     /**
    * Resets the drive encoders to currently read a position of 0.
@@ -157,26 +170,26 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
-  public void resetGyro(){
+  /**
+   * Zeroes the heading of the robot.
+   */
+  public void resetGyro() {
 
     gyro.reset();
-    
+
   }
 
-  /**
-   * Gets the average distance of the TWO encoders.
+ 
+   /**
+   * Returns the currently-estimated pose of the robot.
    *
-   * @return the average of the TWO encoder readings
+   * @return The pose.
    */
-  // public double getAverageEncoderDistance() {
-  //   return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
-  // }
   public Pose2d getPose() {
 
-    return pose;
+    return odometry.getPoseMeters();
 
   }
-
   public void setOutput(double leftVolts, double rightVolts) {
     leftMaster.setVoltage(leftVolts);
     rightMaster.setVoltage(-rightVolts); 
@@ -210,7 +223,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   */  
   public double getLeftWheelSpeed() {
 
-    return leftMaster.getSelectedSensorVelocity(0)  *DriveConstants.INVERT_ENCODER* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
+    return leftMaster.getSelectedSensorVelocity(0)  * DriveConstants.INVERT* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER
+    * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
 
   }
 
@@ -226,10 +240,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
-  public DifferentialDriveKinematics getKinematics() {
+//   public DifferentialDriveKinematics getKinematics() {
 
-    return diffDriveKine;
-}
+//     return diffDriveKine;
+// }
 
   public PIDController getLeftPIDController(){
 
@@ -256,14 +270,11 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   @Override
  public void periodic(){
 
- // gyroangle = Rotation2d.fromDegrees(-gyro.) 
- pose = diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
- 
- diffDriveOdo.update(getHeading(), getLeftPosition(), getRightPosition());
- 
+  odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftPosition(),
+    getRightPosition());
  
 
-  SmartDashboard.putNumber("Gyro Heading", getHeading().getDegrees());
+  SmartDashboard.putNumber("Gyro Heading", getHeading());
   SmartDashboard.getNumber("Gyro Setpoint", 0);
   SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
   SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_0 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));

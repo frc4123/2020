@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -29,60 +32,84 @@ public final class Constants {
 
     public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 4;
 
-    
-
-    // on right side so we reverse it if we put the encode on correct. disble if we
-    // need to once we test
-    public static final boolean LEFT_ENCODER_REVERSED = false;
-
-    public static final boolean RIGHT_ENCODER_REVERSED = true;
-
-    //count per revolution
-    public static final int MAG_ENCODER_CPR = 4096;
-
-    // 1/4096
-    public static final double TICKS_TO_REVOLUTIOIN_MAG_ENCODER = 0.00024414062;
-
-    //10 * (1/4096)
-    public static final double TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER = 0.00244140625;
-
-   	public static final int INVERT_ENCODER = -1;
-
     public static final double  TRACK_WIDTH_METERS = 0.635;
 
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
+        new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+
+    public static final SimpleMotorFeedforward SIMPLE_MOTOR_FEED_FOWARD = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
+
+    public static final int MAG_ENCODER_CPR = 4096;
+
+    /**
+     * 1/4096
+     */
+    public static final double TICKS_TO_REVOLUTIOIN_MAG_ENCODER = 0.00024414062;
+
+    /**
+     * 10 * (1/4096)
+     */
+    public static final double TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER = 0.00244140625;
+    
+    public static final int INVERT = -1;
+  
     public static final double WHEEL_DIAMETER_METERS = 0.16;
     
-    public static boolean isGyroReversed = true;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI* WHEEL_DIAMETER_METERS;
+
+	  public static final double RAMSETE_B = 2.0;
+
+  	public static final double RAMSETE_ZETA = 0.7;
+
+  	public static final double MAX_METERS_PER_SECOND = 0.5;
+
+	  public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+
+	public static final double MAX_VOLTAGE_AUTO = 10;
+    
+    public static boolean IS_GYRO_REVERSED = true;
   }
 
   public static final class OIConstants {
+
     public static final int DRIVER_CONTROLLER_PORT = 0;
+
     public static final int AUXDRIVER_CONTROLLER_PORT = 1;
   }
 
   public static final class ShooterConstants {
     // talon
     public static final int SHOOTER_MASTER_CAN_ID = 7;
+
     public static final int SHOOTER_SLAVE_CAN_ID = 8;
 
   }
+
   public static final class WinchConstants{
+
     public static final int WINCH_MASTER_CAN_ID = 9;
+
     public static final int WINCH_SLAVE_CAN_ID = 10;
+
   }
+
   public static final class ElevatorConstants {
-    public static final int ELEVATOR_MOTOR_CAN_ID = 11;// should be 11
+
+    public static final int ELEVATOR_MOTOR_CAN_ID = 11;
   }
+
   public static final class IntakeConstants {
-    // victor
+
     public static final int INTAKE_ROLLER_CAN_ID = 5;
+
 	  public static final int INTAKE_GATE_CAN_ID = 6;
     	
   }
 
   public static final class HopperConstants {
-    //victor
-    public static final int HOPPER_MASTER_CAN_ID = 0;// needs to be reassinged
+
+    public static final int INDEX_MASTER_CAN_ID = 0;// needs to be reassinged
+
   }
 
   public static final class XboxConstants {
@@ -117,35 +144,42 @@ public final class Constants {
     static public int POV_RIGHT = 90;
     static public int POV_DOWNN = 180;
     static public int POV_LEFT = 270;
-
     
   }
   public static final class PIDConstants{
     
-
       public static final double KS_FEEDFOWARD = 1.2;
+
       public static final double KV_FEEDFOWARD = 0.329;
+
       public static final double KA_FEEDFOWARD = 0.0933; 
+
       public static final double OPTIMAL_KP = 9.31;
+      
       public static final double OPTIMAL_KD = 4.51;
-      //PID STUFF
-    }
+      
+  }
 
   public static final class AutoAimConstants{
 
     public static final double KP_ROTATION_AUTOAIM = 0.025;
+
     public static final double KD_ROTATION_AUTOAIM = 0.0006;
+
     public static final double KF_AUTOAIM = 0.4;
 
-    public static final double ANGLE_TOLERANCE = 1.0; //FOR DEGREES 
-    public static final double ANGLE_SETPOINT = 90.0; //Testing
+    public static final double ANGLE_TOLERANCE = 1.0; //IN DEGREES 
+
+    // public static final double ANGLE_SETPOINT = 90.0; //Testing
     
   }
+
   public static final class MiscConstants{
 
     public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 5;
 
     public static final int PDP_CAN_ID = 0;
+
 	  public static final int PDP_CHANNEL_0 = 0;
 	  public static final int PDP_CHANNEL_1 = 1;
 	  public static final int PDP_CHANNEL_2 = 2;
@@ -164,37 +198,30 @@ public final class Constants {
     
     public static final int ELEVATOR_LOW_SWITCH = 1;
 
-   public static final int ELEVATOR_HIGH_SWITCH = 0;
+    public static final int ELEVATOR_HIGH_SWITCH = 0;
+
   }
 
   public static final class PS4ButtonConstants {
 
-    // Button mappings
     static public int X_BUTTON = 1;
     static public int O_BUTTON = 2;
     static public int SQUARE_BUTTON = 3;
     static public int TRIANGLE_BUTTON = 4;
+
   }
 
   public static final class VoltageConstants{
 
 	public static final double STOP = 0;
-	public static final double HOPPER_VOLTAGE = 3.0;
-	public static final double ELEVATOR_DOWN = 1.0;
-	public static final double ELEVATOR_UP = 3;
-	public static final double ELEVATOR_UP_STOP = 0;
-	public static final double HOPPER_STOP = 0;
-	public static final double INTAKEGATE_DOWN = 2.0;
-	public static final double INTAKEGATE_DOWN_STOP = 0;
-	public static final double _INTAKE_UP_DIFFERENT = -5.0;
-	public static final double INTAKEGATEUP_STOP = 0;
-	public static final double WINCHDOWN = -4.0;
-	public static final double WINCHDOWN_STOP = 0;
-	public static final double WINCHUP = 12.0;
-	public static final double WINCHUP_STOP = 0;
-
-
-
+	public static final double INDEX_WHEEL_SPEED = -1.0;
+	public static final double ELEVATOR_DOWN_VOLTAGE = 1.0;
+	public static final double ELEVATOR_UP_VOLTAGE = 3.0;
+	public static final double INTAKE_GATE_DOWN = 1.0;
+	public static final double INTAKE_GATE_UP_VOLTAGE = -5.0;
+	public static final double WINCH_DOWN_VOLTAGE = -4.0;
+  public static final double WINCH_UP_VOLTAGE = 11.5;
+  
   }
 
 }

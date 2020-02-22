@@ -30,13 +30,13 @@ public class ElevatorUpCommand extends CommandBase {
   @Override
   public void execute() {
     System.out.println("elevator 3 volt");
-    elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP);
+    elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP_VOLTAGE);
   }
   
   @Override
   public void end(boolean interrupted) {
     System.out.println("elevator done");
-    elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP_STOP);
+    elevatorSubsystem.setVoltage(VoltageConstants.STOP);
   }
  @Override
  public boolean isFinished() {

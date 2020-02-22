@@ -9,7 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-
+//TODO add ramp
 public class IntakeInCommand extends CommandBase {
   /**
    * Creates a new IntakeCommand.
@@ -29,13 +29,15 @@ public class IntakeInCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.setIntakeRollerVoltage(6);
+    //out of 1
+    intakeSubsystem.setIntakeRollerSpeed(.5);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeRollerVoltage(0);
+    //out of one, stop should be 0
+    intakeSubsystem.setIntakeRollerSpeed(0);
   }
 
   // Returns true when the command should end.

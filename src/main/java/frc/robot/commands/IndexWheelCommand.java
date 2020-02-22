@@ -34,13 +34,13 @@ public class IndexWheelCommand extends CommandBase {
   @Override
   public void execute() {
     System.out.println("hopper 3 volt");
-    hopperSubsystem.hopperVoltage(VoltageConstants.HOPPER_VOLTAGE);
+    hopperSubsystem.indexMotorSpeed(VoltageConstants.INDEX_WHEEL_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hopperSubsystem.hopperVoltage(VoltageConstants.HOPPER_STOP);
+    hopperSubsystem.indexMotorSpeed(VoltageConstants.STOP);
     System.out.println("hopper done");
   }
 

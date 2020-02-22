@@ -28,14 +28,14 @@ public class IntakeOutCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.setIntakeRollerVoltage(-4);
+    intakeSubsystem.setIntakeRollerSpeed(-.3);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeRollerVoltage(0);
+    intakeSubsystem.setIntakeRollerSpeed(0);
   }
 
   // Returns true when the command should end.

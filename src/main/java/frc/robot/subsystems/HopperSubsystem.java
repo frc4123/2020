@@ -12,16 +12,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HopperConstants;
-import io.github.oblarg.oblog.annotations.Log;
+// import io.github.oblarg.oblog.annotations.Log;
 
 public class HopperSubsystem extends SubsystemBase {
   /**
    * Creates a new HopperSubsystem.
    */
-  private final WPI_VictorSPX hopperMaster = new WPI_VictorSPX(HopperConstants.HOPPER_MASTER_CAN_ID);
+  private final WPI_VictorSPX indexMotor = new WPI_VictorSPX(HopperConstants.INDEX_MASTER_CAN_ID);
 
   public HopperSubsystem() {
-    hopperMaster.setNeutralMode(NeutralMode.Brake);
+    indexMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
@@ -29,8 +29,11 @@ public class HopperSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Log
-  public void hopperVoltage(double voltage){
-    hopperMaster.setVoltage(voltage);
+  /**
+   * Set the speed for the index motor
+   * @param speed takes in double between -1.0 and 1.0
+   */
+  public void indexMotorSpeed(double speed){
+    indexMotor.set(speed);
   }
 }

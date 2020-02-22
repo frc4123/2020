@@ -31,7 +31,7 @@ public class ElevatorDownCommand extends CommandBase {
 public void execute() {
   
   System.out.println("voltage elevator -3");
-  elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_DOWN);
+  elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
   
   }
 

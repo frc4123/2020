@@ -27,11 +27,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setIntakeGateVoltage(double voltage){
-    intakeGate.setVoltage(voltage);
+    intakeGate.set(voltage);
 
   }
-  public void setIntakeRollerVoltage(double voltage){
-    intakeRoller.setVoltage(voltage);
+  public void setIntakeRollerSpeed(double voltage){
+    intakeRoller.set(voltage);
   }
 
 }

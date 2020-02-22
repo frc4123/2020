@@ -30,13 +30,13 @@ public class IntakeGateDownCommand extends CommandBase {
   @Override
   public void execute() {
     //go slower when going down
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKEGATE_DOWN);
+    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKE_GATE_DOWN);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKEGATE_DOWN_STOP);
+    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.STOP);
 
   }
 
