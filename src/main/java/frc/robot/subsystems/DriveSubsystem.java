@@ -67,11 +67,17 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     resetEncoders();
 
-   odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0 ,0, Rotation2d.fromDegrees(getHeading())));
 
   }
 
-
+  /**
+   * 
+   * @return Returns the differential drive object
+   */
+  public DifferentialDrive getDifferentialDrive(){
+    return differentialDrive; 
+  }
   /**
    * Drives the robot using arcade controls.
    *
@@ -89,13 +95,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     //negative because of the unit circle
     //IEEEremainder is pretty much just modulo
-    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.IS_GYRO_REVERSED ? -1.0 : 1.0);
+    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.IS_GYRO_REVERSED_FOR_PATHWEAVER ? -1.0 : 1.0);
 
     }
 
   @Log
   public double getGyroAngle(){
-    return gyro.getAngle();
+    return -gyro.getAngle();
   }
      
   public ADXRS450_Gyro getGyro(){

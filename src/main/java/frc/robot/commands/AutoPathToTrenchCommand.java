@@ -8,26 +8,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PerpetualCommand;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class ShooterCommand extends CommandBase {
-
-  ShooterSubsystem shooterSubsystem;
-
+public class AutoPathToTrenchCommand extends CommandBase {
   /**
-   * Creates a new ShooterCommand.
+   * Creates a new AutoPathToTrenchCommand.
    */
-
-  public ShooterCommand(ShooterSubsystem shooterSubsystem) {
+  public AutoPathToTrenchCommand(DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    // SmartDashboard.putNumber("shooter_top", 3);
-    // SmartDashboard.putNumber("shooter_bottom", 3);
-
-
-
-    this.shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+    addRequirements(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -38,15 +27,11 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setTopShooterMotorVoltage(12);
-    shooterSubsystem.setBottomShooterMotorVoltage(12);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.setTopShooterMotorVoltage(0);
-    shooterSubsystem.setBottomShooterMotorVoltage(0);
   }
 
   // Returns true when the command should end.

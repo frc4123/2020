@@ -8,9 +8,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveSubsystem;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.IndexWheelCommand;
 
@@ -18,6 +19,7 @@ import frc.robot.commands.IndexWheelCommand;
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ShooterSequenceCommand extends ParallelCommandGroup{
+  WaitCommand waitCommand = new WaitCommand(.5);
   /**
    * Creates a new IndexToShooter.
  * @param shooterSubsystem
@@ -28,14 +30,14 @@ public class ShooterSequenceCommand extends ParallelCommandGroup{
 // IndexWheelCommand indexWheelCommand = new IndexWheelCommand(hopperSubsystem);
 // IntakeCommand intakeCommand = new IntakeCommand(intakeSubsystem);
 
-  public ShooterSequenceCommand(DriveSubsystem driveSubsystem, HopperSubsystem hopperSubsystem, ShooterSubsystem shooterSubsystem) {
+  public ShooterSequenceCommand(DriveSubsystem driveSubsystem, IndexSubsystem hopperSubsystem, ShooterSubsystem shooterSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-      new AutoAngleCommand(driveSubsystem),
+     //we want to be straight when we are  new AutoAngleCommand(driveSubsystem),
       
       new ShooterCommand(shooterSubsystem).withTimeout(0.5),
-
+  
       new IndexWheelCommand(hopperSubsystem)
     );
   }

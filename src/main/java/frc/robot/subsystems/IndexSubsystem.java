@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HopperConstants;
 // import io.github.oblarg.oblog.annotations.Log;
 
-public class HopperSubsystem extends SubsystemBase {
+public class IndexSubsystem extends SubsystemBase {
   /**
    * Creates a new HopperSubsystem.
    */
-  private final WPI_VictorSPX indexMotor = new WPI_VictorSPX(HopperConstants.INDEX_MASTER_CAN_ID);
+  private final WPI_VictorSPX indexMotor = new WPI_VictorSPX(HopperConstants.INDEX_MOTOR_CAN_ID);
 
-  public HopperSubsystem() {
+  public IndexSubsystem() {
     indexMotor.setNeutralMode(NeutralMode.Brake);
   }
 

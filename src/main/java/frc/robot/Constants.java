@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,7 +33,7 @@ public final class Constants {
 
     public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 4;
 
-    public static final double  TRACK_WIDTH_METERS = 0.635;
+    public static final double  TRACK_WIDTH_METERS = 0.638;
 
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
@@ -53,7 +54,7 @@ public final class Constants {
     
     public static final int INVERT = -1;
   
-    public static final double WHEEL_DIAMETER_METERS = 0.16;
+    public static final double WHEEL_DIAMETER_METERS = 0.15875;
     
     public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI* WHEEL_DIAMETER_METERS;
 
@@ -61,13 +62,17 @@ public final class Constants {
 
   	public static final double RAMSETE_ZETA = 0.7;
 
-  	public static final double MAX_METERS_PER_SECOND = 0.5;
+  	public static final double MAX_METERS_PER_SECOND = 0.25;
 
-	  public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+	  public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
 
 	public static final double MAX_VOLTAGE_AUTO = 10;
+
+	public static final double STARTING_POSE_X = 12.8;
+
+	public static final double STARTING_POSE_Y = -5.8;
     
-    public static boolean IS_GYRO_REVERSED = true;
+    public static boolean IS_GYRO_REVERSED_FOR_PATHWEAVER = true;
   }
 
   public static final class OIConstants {
@@ -108,7 +113,7 @@ public final class Constants {
 
   public static final class HopperConstants {
 
-    public static final int INDEX_MASTER_CAN_ID = 0;// needs to be reassinged
+    public static final int INDEX_MOTOR_CAN_ID = 12;
 
   }
 
@@ -154,8 +159,8 @@ public final class Constants {
 
       public static final double KA_FEEDFOWARD = 0.0933; 
 
-      public static final double OPTIMAL_KP = 9.31;
-      
+      public static final double OPTIMAL_KP = 4;
+  
       public static final double OPTIMAL_KD = 4.51;
       
   }
@@ -166,7 +171,7 @@ public final class Constants {
 
     public static final double KD_ROTATION_AUTOAIM = 0.0006;
 
-    public static final double KF_AUTOAIM = 0.4;
+    
 
     public static final double ANGLE_TOLERANCE = 1.0; //IN DEGREES 
 
@@ -175,6 +180,12 @@ public final class Constants {
   }
 
   public static final class MiscConstants{
+
+    public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
+     new DifferentialDriveVoltageConstraint(
+        DriveConstants.SIMPLE_MOTOR_FEED_FOWARD,
+        DriveConstants.DRIVE_KINEMATICS,
+        DriveConstants.MAX_VOLTAGE_AUTO);
 
     public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 5;
 
@@ -217,8 +228,8 @@ public final class Constants {
 	public static final double INDEX_WHEEL_SPEED = -1.0;
 	public static final double ELEVATOR_DOWN_VOLTAGE = 1.0;
 	public static final double ELEVATOR_UP_VOLTAGE = 3.0;
-	public static final double INTAKE_GATE_DOWN = 1.0;
-	public static final double INTAKE_GATE_UP_VOLTAGE = -5.0;
+	public static final double INTAKE_GATE_DOWN = .5;
+	public static final double INTAKE_GATE_UP_VOLTAGE = -4;
 	public static final double WINCH_DOWN_VOLTAGE = -4.0;
   public static final double WINCH_UP_VOLTAGE = 11.5;
   
