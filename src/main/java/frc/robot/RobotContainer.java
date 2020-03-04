@@ -121,34 +121,36 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // shoot sequence
-    new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(
-        autoAimCommand.andThen(new ShooterCommand(shooterSubsystem).alongWith(new IndexWheelCommand(indexSubsystem))));
-    // .andThen(teleshootfromdistance));
     new JoystickButton(driverController, XboxConstants.LEFT_STICK).whenPressed(() -> driveSubsystem.setMaxOutput(.5))
         .whenReleased(() -> driveSubsystem.setMaxOutput(1));
     new JoystickButton(driverController, XboxConstants.RIGHT_STICK).whenPressed(() -> driveSubsystem.setMaxOutput(.5))
         .whenReleased(() -> driveSubsystem.setMaxOutput(1));
+
+    // new JoystickButton(driverController, XboxConstants.A_BUTTON);
+    // new JoystickButton(driverController, XboxConstants.B_BUTTON);
     new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeGateDownCommand);
     new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(intakeGateUpCommand);
-    new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(intakeInCommand);
-    new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(intakeOutCommand);
-    // gate auto goes up?
+    new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorDownCommand);
+    new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorUpCommand);
+
     // auxcommands
-    new JoystickButton(auxDriverController, XboxConstants.RB_BUTTON).whileHeld(elevatorDownCommand);
-    new JoystickButton(auxDriverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
-    // new JoystickButton(auxDriverController,
-    // XboxConstants.Y_BUTTON).whileHeld(indexCommand);
-    // new JoystickButton(auxDriverController,
-    // XboxConstants.X_BUTTON).whileHeld(shooterCommand);
+
     new JoystickButton(auxDriverController, XboxConstants.A_BUTTON).whileHeld(winchDownCommand);
     new JoystickButton(auxDriverController, XboxConstants.B_BUTTON).whileHeld(winchUpCommand);
+    new JoystickButton(auxDriverController, XboxConstants.X_BUTTON).whileHeld(autoAimCommand);
+    new JoystickButton(auxDriverController, XboxConstants.Y_BUTTON)
+        .whileHeld(new ShooterCommand(shooterSubsystem).alongWith(new IndexWheelCommand(indexSubsystem)));
+    new JoystickButton(auxDriverController, XboxConstants.RB_BUTTON).whileHeld(intakeOutCommand);
+    new JoystickButton(auxDriverController, XboxConstants.LB_BUTTON).whileHeld(intakeInCommand);
 
   }
 
   public Command getAutonomousCommand() {
     // Must be aligned to the bottom left corner; middle wheel on the initiation
     // line.
+    // clear the command group to use it again, dont do this in teleop
     CommandGroupBase.clearGroupedCommands();
+
     return new AutoDriveBackCommand(driveSubsystem).andThen(new WaitCommand(.2)
         .andThen(new ShooterCommand(shooterSubsystem)).alongWith(new IndexWheelCommand(indexSubsystem).withTimeout(7)));
 
