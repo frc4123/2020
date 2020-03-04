@@ -29,13 +29,13 @@ public class ElevatorUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("elevator 3 volt");
+    // System.out.println("elevator 3 volt");
     elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_UP_VOLTAGE);
   }
   
   @Override
   public void end(boolean interrupted) {
-    System.out.println("elevator done");
+    // System.out.println("elevator done");
     elevatorSubsystem.setVoltage(VoltageConstants.STOP);
   }
  @Override

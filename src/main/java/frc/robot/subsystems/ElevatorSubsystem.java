@@ -16,13 +16,12 @@ import frc.robot.Constants.MiscConstants;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class 
-ElevatorSubsystem extends SubsystemBase implements Loggable {
- 
- private final WPI_VictorSPX elevatorMotor = new WPI_VictorSPX(ElevatorConstants.ELEVATOR_MOTOR_CAN_ID);
+public class ElevatorSubsystem extends SubsystemBase implements Loggable {
 
- private final DigitalInput limitSwitch1 = new DigitalInput(MiscConstants.ELEVATOR_HIGH_SWITCH);
- private final DigitalInput limitSwitch2 = new DigitalInput(MiscConstants.ELEVATOR_LOW_SWITCH);
+  private final WPI_VictorSPX elevatorMotor = new WPI_VictorSPX(ElevatorConstants.ELEVATOR_MOTOR_CAN_ID);
+
+  private final DigitalInput limitSwitch1 = new DigitalInput(MiscConstants.ELEVATOR_HIGH_SWITCH);
+  private final DigitalInput limitSwitch2 = new DigitalInput(MiscConstants.ELEVATOR_LOW_SWITCH);
 
   public ElevatorSubsystem() {
     elevatorMotor.configOpenloopRamp(1);
@@ -30,18 +29,18 @@ ElevatorSubsystem extends SubsystemBase implements Loggable {
   }
 
   @Log
-  public boolean isLimitTopSwitchHit(){
+  public boolean isLimitTopSwitchHit() {
     return limitSwitch1.get();
   }
 
   @Log
-  public boolean isBottomLimitSwitchHit(){
+  public boolean isBottomLimitSwitchHit() {
     return limitSwitch2.get();
   }
 
   @Log
-  public void setVoltage(double voltage){
-    System.out.println("elevator set voltage: " + voltage);
+  public void setVoltage(double voltage) {
+    // System.out.println("elevator set voltage: " + voltage);
     elevatorMotor.set(voltage);
   }
 

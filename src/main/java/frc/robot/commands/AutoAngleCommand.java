@@ -83,7 +83,7 @@ public class AutoAngleCommand extends CommandBase {
 
     // CommandGroupBase.clearGroupedCommand(turnToAngle);
     // System.out.println("debug.schedule();");
-    System.out.println("turnToAngle.schedule();");
+    // System.out.println("turnToAngle.schedule();");
     // turnToAngle.andThen(() -> {
     // System.out.println("finished");
     // }).schedule();

@@ -36,7 +36,7 @@ public class IndexWheelCommand extends CommandBase {
   public void execute() {
 
     hopperSubsystem.indexMotorSpeed(VoltageConstants.INDEX_WHEEL_SPEED);
-    System.out.println("Index" + VoltageConstants.INDEX_WHEEL_SPEED);
+    // System.out.println("Index" + VoltageConstants.INDEX_WHEEL_SPEED);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,7 +44,7 @@ public class IndexWheelCommand extends CommandBase {
   public void end(boolean interrupted) {
     hopperSubsystem.indexMotorSpeed(VoltageConstants.STOP);
 
-    System.out.println("index done");
+    // System.out.println("index done");
   }
 
   // Returns true when the command should end.

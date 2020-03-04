@@ -139,8 +139,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    System.out.println("Robot disabled");
-    drive.tankDrive(0, 0);
+    // System.out.println("Robot disabled");
+    // drive.tankDrive(0, 0);
   }
 
   @Override
@@ -149,10 +149,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // feedback for users, but not used by the control program
-    SmartDashboard.putNumber("l_encoder_pos", leftEncoderPosition.get());
-    SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
-    SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
-    SmartDashboard.putNumber("r_encoder_rate", rightEncoderRate.get());
+    // SmartDashboard.putNumber("l_encoder_pos", leftEncoderPosition.get());
+    // SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
+    // SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
+    // SmartDashboard.putNumber("r_encoder_rate", rightEncoderRate.get());
   }
 
   @Override

@@ -209,14 +209,9 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   }
 
   public void setOutputVoltage(double leftVolts, double rightVolts) {
-    System.out.println(leftVolts);
-    System.out.println(rightVolts);
-    double leftcompvolts = leftVolts + 6.5;
-    double rightcompvolts = rightVolts - 6.5;
-    leftMaster.setVoltage(leftcompvolts);
-    rightMaster.setVoltage(-rightcompvolts);
-    System.out.println(leftcompvolts);
-    System.out.println(rightcompvolts);
+
+    leftMaster.setVoltage(leftVolts);
+    rightMaster.setVoltage(-rightVolts);
 
     differentialDrive.feed();
   }

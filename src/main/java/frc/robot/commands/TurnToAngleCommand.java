@@ -44,7 +44,7 @@ public class TurnToAngleCommand extends PIDCommand {
     // Configure additional PID options by calling `getController` here.
     getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
     this.driveSubsystem = driveSubsystem;
-    System.out.println("setterpoint: " + setterpoint);
+    // System.out.println("setterpoint: " + setterpoint);
 
   }
 
@@ -57,7 +57,7 @@ public class TurnToAngleCommand extends PIDCommand {
     setterpoint = driveSubsystem.getGyroAngle() - theParticularChangeInAnglularPositionWeWouldLike;
 
     super.initialize();
-    System.out.println("Initialized pidcommand");
+    // System.out.println("Initialized pidcommand");
 
   }
 
@@ -68,20 +68,20 @@ public class TurnToAngleCommand extends PIDCommand {
 
   @Override
   public void execute() {
-    System.out.println("turntoangle_position_error " + getController().getPositionError());
+    // System.out.println("turntoangle_position_error " + getController().getPositionError());
     super.execute();
   }
 
   @Override
   public void schedule(boolean interruptible) {
     super.schedule(interruptible);
-    System.out.println("Schedule");
+    // System.out.println("Schedule");
   }
 
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    System.out.println("end");
+    // System.out.println("end");
     driveSubsystem.setVoltageCompensation(false, MiscConstants.TURN_VOLTAGE_COMPENSATION_VOLTS);
   }
 

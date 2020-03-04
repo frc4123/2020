@@ -30,7 +30,7 @@ public class ElevatorDownCommand extends CommandBase {
 @Override
 public void execute() {
   
-  System.out.println("voltage elevator -3");
+  // System.out.println("voltage elevator -3");
   elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
   
   }
@@ -38,7 +38,7 @@ public void execute() {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     System.out.println("elevator done");
+    //  System.out.println("elevator done");
      elevatorSubsystem.setVoltage(VoltageConstants.STOP);
    
     // elevatorSubsystem.setVoltage(0);

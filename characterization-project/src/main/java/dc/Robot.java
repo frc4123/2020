@@ -139,7 +139,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    System.out.println("Robot disabled");
+    // System.out.println("Robot disabled");
     drive.tankDrive(0, 0);
   }
 
@@ -149,25 +149,25 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // feedback for users, but not used by the control program
-    SmartDashboard.putNumber("l_encoder_pos", leftEncoderPosition.get());
-    SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
-    SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
-    SmartDashboard.putNumber("r_encoder_rate", rightEncoderRate.get());
+    // SmartDashboard.putNumber("l_encoder_pos", leftEncoderPosition.get());
+    // SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
+    // SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
+    // SmartDashboard.putNumber("r_encoder_rate", rightEncoderRate.get());
   }
 
   @Override
   public void teleopInit() {
-    System.out.println("Robot in operator control mode");
+    // System.out.println("Robot in operator control mode");
   }
 
   @Override
   public void teleopPeriodic() {
-    drive.arcadeDrive(-stick.getY(), stick.getX());
+    // drive.arcadeDrive(-stick.getY(), stick.getX());
   }
 
   @Override
   public void autonomousInit() {
-    System.out.println("Robot in autonomous mode");
+    // System.out.println("Robot in autonomous mode");
   }
 
   /**
