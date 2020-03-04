@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+//TODO make it on a timer so it goes down and doesnt wind back up. change to whenpressed
+
 public class ElevatorDownCommand extends CommandBase {
-  
+
   ElevatorSubsystem elevatorSubsystem;
 
   public ElevatorDownCommand(ElevatorSubsystem elevatorSubsystem) {
@@ -24,31 +26,31 @@ public class ElevatorDownCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-}
+  }
 
-// Called every time the scheduler runs while the command is scheduled.
-@Override
-public void execute() {
-  
-  // System.out.println("voltage elevator -3");
-  elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
-  
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+
+    // System.out.println("voltage elevator -3");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //  System.out.println("elevator done");
-     elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
-   
+    // System.out.println("elevator done");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
+
     // elevatorSubsystem.setVoltage(0);
-    
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; 
-    //elevatorSubsystem.isBottomLimitSwitchHit();
+    return false;
+    // elevatorSubsystem.isBottomLimitSwitchHit();
   }
 }

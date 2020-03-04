@@ -20,18 +20,19 @@ public class IntakeSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeGate = new WPI_TalonSRX(IntakeConstants.INTAKE_GATE_CAN_ID);
 
   public IntakeSubsystem() {
-    //if it is pushing it out with a positive value change this 
+    // if it is pushing it out with a positive value change this
     intakeRoller.configOpenloopRamp(.3);
     intakeRoller.setInverted(false);
     intakeGate.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void setIntakeGateVoltage(double voltage){
+  public void setIntakeGateVoltage(double voltage) {
     intakeGate.setVoltage(voltage);
 
   }
-  public void setIntakeRollerSpeed(double voltage){
-    intakeRoller.set(voltage);
+
+  public void setIntakeRollerSpeed(double speed) {
+    intakeRoller.set(speed);
   }
 
 }

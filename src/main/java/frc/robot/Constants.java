@@ -208,7 +208,7 @@ public final class Constants {
     public static final double WINCH_DOWN_VOLTAGE = -4.0;
     public static final double WINCH_UP_VOLTAGE = 11.5;
     public static final double INTAKE_WHEEL_SPEED_OUT = .5;
-    public static final double INTAKE_WHEEL_SPEED_IN = .4 * 12;
+    public static final double INTAKE_WHEEL_SPEED_IN = .4 ;
 
   }
 
