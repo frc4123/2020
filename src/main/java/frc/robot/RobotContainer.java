@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 // import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.LogitecController;
 // import edu.wpi.first.wpilibj.controller.RamseteController;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
 // import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -133,15 +134,15 @@ public class RobotContainer {
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorDownCommand);
     new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorUpCommand);
 
-    // auxcommands
+    // auxcommands]\
 
-    new JoystickButton(auxDriverController, XboxConstants.A_BUTTON).whileHeld(winchDownCommand);
-    new JoystickButton(auxDriverController, XboxConstants.B_BUTTON).whileHeld(winchUpCommand);
-    new JoystickButton(auxDriverController, XboxConstants.X_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(auxDriverController, XboxConstants.Y_BUTTON)
-        .whileHeld(new ShooterCommand(shooterSubsystem).alongWith(new IndexWheelCommand(indexSubsystem)));
-    new JoystickButton(auxDriverController, XboxConstants.RB_BUTTON).whileHeld(intakeOutCommand);
-    new JoystickButton(auxDriverController, XboxConstants.LB_BUTTON).whileHeld(intakeInCommand);
+    new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON).whileHeld(winchDownCommand);
+    new JoystickButton(auxDriverController, LogitecController.FOUR_BUTTON).whileHeld(winchUpCommand);
+    new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
+    new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON).whileHeld(new ShooterCommand(shooterSubsystem)
+        .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
+    new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
+    new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
 
   }
 
@@ -152,7 +153,7 @@ public class RobotContainer {
     CommandGroupBase.clearGroupedCommands();
 
     return new AutoDriveBackCommand(driveSubsystem).andThen(new WaitCommand(.2)
-        .andThen(new ShooterCommand(shooterSubsystem)).alongWith(new IndexWheelCommand(indexSubsystem).withTimeout(7)));
+        .andThen(new ShooterCommand(shooterSubsystem)).alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem).withTimeout(7))));
 
   }
 
