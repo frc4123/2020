@@ -44,8 +44,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
-  private final PowerDistributionPanel Pdp = new PowerDistributionPanel(MiscConstants.PDP_CAN_ID);
-
   // **TRAJECTORY**\\
   DifferentialDriveOdometry odometry;
 
@@ -119,15 +117,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return (getLeftWheelPositionMeters() + getRightWheelPositionMeters() / 2.0);
   }
 
-  /**
-   * Returns the current of the specified channel in Amps
-   * 
-   * @param channel The channel of the pdp
-   * @return the current of the channel given
-   */
-  double getPDPCurent(int channel) {
-    return Pdp.getCurrent(channel);
-  }
 
   /**
    * Returns the left wheel's position in meters
@@ -292,24 +281,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public void periodic() {
 
     odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelPositionMeters(), getRightWheelPositionMeters());
-
-    SmartDashboard.putNumber("Gyro Heading", getHeading());
-    SmartDashboard.getNumber("Gyro Setpoint", 0);
-    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_0,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_1,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_2));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_2,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_3,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_12,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_13,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_14,
-        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
 
   }
 

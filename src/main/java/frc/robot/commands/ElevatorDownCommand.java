@@ -31,7 +31,7 @@ public class ElevatorDownCommand extends CommandBase {
 public void execute() {
   
   // System.out.println("voltage elevator -3");
-  elevatorSubsystem.setVoltage(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
+  elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
   
   }
 
@@ -39,7 +39,7 @@ public void execute() {
   @Override
   public void end(boolean interrupted) {
     //  System.out.println("elevator done");
-     elevatorSubsystem.setVoltage(VoltageConstants.STOP);
+     elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
    
     // elevatorSubsystem.setVoltage(0);
     

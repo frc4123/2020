@@ -186,28 +186,6 @@ public final class Constants {
 
     public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 5;
 
-    public static final int PDP_CAN_ID = 0;
-
-    public static final int PDP_CHANNEL_0 = 0;
-    public static final int PDP_CHANNEL_1 = 1;
-    public static final int PDP_CHANNEL_2 = 2;
-    public static final int PDP_CHANNEL_3 = 3;
-    public static final int PDP_CHANNEL_4 = 4;
-    public static final int PDP_CHANNEL_5 = 5;
-    public static final int PDP_CHANNEL_6 = 6;
-    public static final int PDP_CHANNEL_7 = 7;
-    public static final int PDP_CHANNEL_8 = 8;
-    public static final int PDP_CHANNEL_9 = 9;
-    public static final int PDP_CHANNEL_10 = 10;
-    public static final int PDP_CHANNEL_11 = 11;
-    public static final int PDP_CHANNEL_12 = 12;
-    public static final int PDP_CHANNEL_13 = 13;
-    public static final int PDP_CHANNEL_14 = 14;
-
-    public static final int ELEVATOR_LOW_SWITCH = 1;
-
-    public static final int ELEVATOR_HIGH_SWITCH = 0;
-
   }
 
   public static final class PS4ButtonConstants {
@@ -230,7 +208,7 @@ public final class Constants {
     public static final double WINCH_DOWN_VOLTAGE = -4.0;
     public static final double WINCH_UP_VOLTAGE = 11.5;
     public static final double INTAKE_WHEEL_SPEED_OUT = .5;
-    public static final double INTAKE_WHEEL_SPEED_IN = .6 * 12;
+    public static final double INTAKE_WHEEL_SPEED_IN = .4 * 12;
 
   }
 

@@ -21,11 +21,10 @@ import io.github.oblarg.oblog.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
- 
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -33,15 +32,12 @@ public class Robot extends TimedRobot {
 
   // private double startTime;
 
-  
-  
-   
   @Override
   public void robotInit() {
-                                                    
+
     robotContainer = new RobotContainer();
     Logger.configureLoggingAndConfig(robotContainer, false);
-    
+
   }
 
   /**
@@ -65,17 +61,8 @@ public class Robot extends TimedRobot {
     // and tyler was here
 
     CommandScheduler.getInstance().run();
-    
+
     Logger.updateEntries();
-
-    
-    // @Log
-    // getPDPCurent(1);
-    // SmartDashboard.putNumber("Driver Y Axis", -robotContainer.driverController.getY(Hand.kLeft));
-    // SmartDashboard.putNumber("Driver X Axis", robotContainer.driverController.getX(Hand.kRight));
-
-
-      
   }
 
   /**
@@ -94,23 +81,19 @@ public class Robot extends TimedRobot {
    * {@link RobotContainer} class.
    */
   @Override
-  public void autonomousInit()  {
-    
+  public void autonomousInit() {
+
     // robotContainer.robotDrive resetEncoders();
-  
-      autonomousCommand = robotContainer.getAutonomousCommand();
-      robotContainer.getDriveSubsystem().resetOdometry(new Pose2d());
-      // schedule the autonomous command (example)
-      //prevents doing things to a null object so robot dont go bye bye
-      if (autonomousCommand != null) {
-        autonomousCommand.schedule();
-      }
-      
+
+    autonomousCommand = robotContainer.getAutonomousCommand();
+    robotContainer.getDriveSubsystem().resetOdometry(new Pose2d());
+    // schedule the autonomous command (example)
+    // prevents doing things to a null object so robot dont go bye bye
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
     }
 
-   
-  
-  
+  }
 
   /**
    * This function is called periodically during autonomous.
@@ -118,21 +101,21 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
-  //   double time =  Timer.getFPGATimestamp();
+    // double time = Timer.getFPGATimestamp();
 
-  //   if (time - startTime < 3) {
-  //   m_robotContainer.robotDrive.
-  //   leftMotor1.set(0.6);
-  //   leftMotor2.set(0.6);
-  //   rightMotor1.set(-0.6);
-  //   rightMotor2.set(-0.6);
-    
-  // }else{
+    // if (time - startTime < 3) {
+    // m_robotContainer.robotDrive.
+    // leftMotor1.set(0.6);
+    // leftMotor2.set(0.6);
+    // rightMotor1.set(-0.6);
+    // rightMotor2.set(-0.6);
 
-  //   leftMotor1.set(0);
-  //   leftMotor2.set(0);
-  //   rightMotor1.set(0);
-  //   rightMotor2.set(0);
+    // }else{
+
+    // leftMotor1.set(0);
+    // leftMotor2.set(0);
+    // rightMotor1.set(0);
+    // rightMotor2.set(0);
 
   }
 
@@ -145,7 +128,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    
+
   }
 
   /**
@@ -170,5 +153,5 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
-  
-//Gyro 
+
+// Gyro

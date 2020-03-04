@@ -9,19 +9,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.MiscConstants;
-import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class ElevatorSubsystem extends SubsystemBase implements Loggable {
+public class ElevatorSubsystem extends SubsystemBase {
 
   private final WPI_VictorSPX elevatorMotor = new WPI_VictorSPX(ElevatorConstants.ELEVATOR_MOTOR_CAN_ID);
-
-  private final DigitalInput limitSwitch1 = new DigitalInput(MiscConstants.ELEVATOR_HIGH_SWITCH);
-  private final DigitalInput limitSwitch2 = new DigitalInput(MiscConstants.ELEVATOR_LOW_SWITCH);
 
   public ElevatorSubsystem() {
     elevatorMotor.configOpenloopRamp(1);
@@ -29,19 +23,9 @@ public class ElevatorSubsystem extends SubsystemBase implements Loggable {
   }
 
   @Log
-  public boolean isLimitTopSwitchHit() {
-    return limitSwitch1.get();
-  }
-
-  @Log
-  public boolean isBottomLimitSwitchHit() {
-    return limitSwitch2.get();
-  }
-
-  @Log
-  public void setVoltage(double voltage) {
+  public void setElevatorSpeed(double speed) {
     // System.out.println("elevator set voltage: " + voltage);
-    elevatorMotor.set(voltage);
+    elevatorMotor.set(speed);
   }
 
 }
