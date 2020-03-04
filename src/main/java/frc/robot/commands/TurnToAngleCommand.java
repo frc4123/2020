@@ -29,7 +29,7 @@ public class TurnToAngleCommand extends PIDCommand {
 
     super(
         // The controller that the command will use
-        new PIDController(1.5, 0.1, .1),
+        new PIDController(1.2, 0.1, .1),
         // This should return the measurement
         () -> driveSubsystem.getGyroAngle(),
         // This should return the setpoint (can also be a constant)
