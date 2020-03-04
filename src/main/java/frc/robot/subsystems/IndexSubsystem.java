@@ -36,6 +36,5 @@ public class IndexSubsystem extends SubsystemBase {
    */
   public void indexMotorSpeed(double speed) {
     indexMotor.set(speed);
-    indexMotor.feed();
   }
 }

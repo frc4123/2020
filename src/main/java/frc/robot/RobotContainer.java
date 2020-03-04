@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj.geometry.Translation2d;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.PS4ButtonConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.AutoAngleCommand;
 import frc.robot.commands.AutoDriveBackCommand;
@@ -110,7 +109,6 @@ public class RobotContainer {
     configureButtonBindings();
     // Configure default commands
     driveSubsystem.setDefaultCommand(new RunCommand(() -> {
-      driveSubsystem.getDifferentialDrive().feed();
       driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
           driverController.getX(GenericHID.Hand.kRight));
       // System.out.println("Driver turn" +

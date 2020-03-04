@@ -203,8 +203,8 @@ public final class Constants {
     public static final double INDEX_WHEEL_SPEED = 1.0;
     public static final double ELEVATOR_DOWN_VOLTAGE = -1.0;
     public static final double ELEVATOR_UP_VOLTAGE = 3.0;
-    public static final double INTAKE_GATE_DOWN = 1;
-    public static final double INTAKE_GATE_UP_VOLTAGE = -4;
+    public static final double INTAKE_GATE_DOWN = 1.3;
+    public static final double INTAKE_GATE_UP_VOLTAGE = -4.5;
     public static final double WINCH_DOWN_VOLTAGE = -4.0;
     public static final double WINCH_UP_VOLTAGE = 11.5;
     public static final double INTAKE_WHEEL_SPEED_OUT = .5;
