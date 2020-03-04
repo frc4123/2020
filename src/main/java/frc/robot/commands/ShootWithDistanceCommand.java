@@ -25,7 +25,7 @@ public class ShootWithDistanceCommand extends CommandBase {
   NetworkTableEntry target3D;
 
   double setTargetDistance;
-  
+
   public ShootWithDistanceCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -38,24 +38,22 @@ public class ShootWithDistanceCommand extends CommandBase {
   }
 
   private void getDistance() {
-    double[] defaultArray = {0.0, 0.0, 0.0};
+    double[] defaultArray = { 0.0, 0.0, 0.0 };
     double targetDistance = target3D.getDoubleArray(defaultArray)[0];
 
     boolean threeMeters = targetDistance <= 3;
     boolean threeToEightMeters = targetDistance > 3 && targetDistance <= 8;
     boolean eightToTenMeters = targetDistance > 8 && targetDistance <= 10;
 
-
     if (threeMeters) {
       setTargetDistance = 3;
-    }
-    else if (threeToEightMeters) {
+    } else if (threeToEightMeters) {
       setTargetDistance = 5;
-    }
-    else if (eightToTenMeters) {
+    } else if (eightToTenMeters) {
       setTargetDistance = 10;
     }
   }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

@@ -29,8 +29,9 @@ public class AutoAngleCommand extends CommandBase {
   NetworkTable table;
   NetworkTableEntry targetX;
   NetworkTableEntry targetY;
+  NetworkTableEntry target3DPosition;
 
-  PIDCommandDebug debug;
+  TurnToAngleCommand turnToAngleCommand;
   DriveSubsystem driveSubsystem;
 
   public AutoAngleCommand(DriveSubsystem driveSubsystem) {
@@ -39,7 +40,7 @@ public class AutoAngleCommand extends CommandBase {
     addRequirements(driveSubsystem);
 
     // turnToAngle = new TurnToAngleCommand(driveSubsystem);
-    debug = new PIDCommandDebug(driveSubsystem);
+    turnToAngleCommand = new TurnToAngleCommand(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -50,6 +51,7 @@ public class AutoAngleCommand extends CommandBase {
 
     targetX = table.getEntry("targetYaw");
     targetY = table.getEntry("targetPitch");
+    target3DPosition = table.getEntry("targetPose");
 
     turnBasedOnCamera();
 
@@ -61,6 +63,15 @@ public class AutoAngleCommand extends CommandBase {
 
   }
 
+  public void distanceCalculation() {
+    // test if the value is type double or double[], and also convert the double to
+    // a floor?... for the switch case
+    // double targetDistance = target3DPosition.getDouble(0.0).;
+    // switch (targetDistance) {
+
+    // }
+  }
+
   private void turnBasedOnCamera() {
     double cameraSetpoint = targetX.getDouble(0.0) - (.2 * targetX.getDouble(0.0));
     // 80 ppercent is pretty darn close offset
@@ -68,7 +79,7 @@ public class AutoAngleCommand extends CommandBase {
 
     // maybe subtract an offset
 
-    debug.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
+    turnToAngleCommand.setThePerticularChangeInAnglularPositionWeWouldLike(-cameraSetpoint);
 
     // CommandGroupBase.clearGroupedCommand(turnToAngle);
     // System.out.println("debug.schedule();");
@@ -77,7 +88,7 @@ public class AutoAngleCommand extends CommandBase {
     // System.out.println("finished");
     // }).schedule();
 
-    debug.schedule();
+    turnToAngleCommand.schedule();
 
   }
 
@@ -85,13 +96,13 @@ public class AutoAngleCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 
-    debug.cancel();
+    turnToAngleCommand.cancel();
     // turnToAngle.cancel();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turnToAngleCommand.getController().atSetpoint();
   }
 }

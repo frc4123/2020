@@ -8,39 +8,43 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class IntakeGateUpCommand extends CommandBase {
+public class AutoDriveBackCommand extends CommandBase {
+  /**
+   * Creates a new AutoDriveBack.
+   */
+  DriveSubsystem driveSubsystem;
 
-  IntakeSubsystem intakeSubsystem;
-
-  public IntakeGateUpCommand(IntakeSubsystem intakeSubsystem) {
+  public AutoDriveBackCommand(DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem);
-    this.intakeSubsystem = intakeSubsystem;
+    addRequirements(driveSubsystem);
+    this.driveSubsystem = driveSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    driveSubsystem.resetEncoders();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKE_GATE_UP_VOLTAGE);
+    driveSubsystem.arcadeDrive(-.55, 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.STOP);
+    driveSubsystem.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(driveSubsystem.getAverageEncoderDistanceMeters()) >= 3.7/* meters to drive */;
+
   }
 }

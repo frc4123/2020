@@ -33,12 +33,13 @@ public final class Constants {
 
     public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 4;
 
-    public static final double  TRACK_WIDTH_METERS = 0.638;
+    public static final double TRACK_WIDTH_METERS = 0.638;
 
-    public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
-        new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(
+        TRACK_WIDTH_METERS);
 
-    public static final SimpleMotorFeedforward SIMPLE_MOTOR_FEED_FOWARD = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
+    public static final SimpleMotorFeedforward SIMPLE_MOTOR_FEED_FOWARD = new SimpleMotorFeedforward(
+        PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
 
     public static final int MAG_ENCODER_CPR = 4096;
 
@@ -51,27 +52,27 @@ public final class Constants {
      * 10 * (1/4096)
      */
     public static final double TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER = 0.00244140625;
-    
+
     public static final int INVERT = -1;
-  
+
     public static final double WHEEL_DIAMETER_METERS = 0.15875;
-    
-    public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI* WHEEL_DIAMETER_METERS;
 
-	  public static final double RAMSETE_B = 2.0;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI * WHEEL_DIAMETER_METERS;
 
-  	public static final double RAMSETE_ZETA = 0.7;
+    public static final double RAMSETE_B = 2.0;
 
-  	public static final double MAX_METERS_PER_SECOND = 0.25;
+    public static final double RAMSETE_ZETA = 0.7;
 
-	  public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
+    public static final double MAX_METERS_PER_SECOND = 0.25;
 
-	public static final double MAX_VOLTAGE_AUTO = 10;
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
 
-	public static final double STARTING_POSE_X = 12.8;
+    public static final double MAX_VOLTAGE_AUTO = 10;
 
-	public static final double STARTING_POSE_Y = -5.8;
-    
+    public static final double STARTING_POSE_X = 12.8;
+
+    public static final double STARTING_POSE_Y = -5.8;
+
     public static boolean IS_GYRO_REVERSED_FOR_PATHWEAVER = true;
   }
 
@@ -90,7 +91,7 @@ public final class Constants {
 
   }
 
-  public static final class WinchConstants{
+  public static final class WinchConstants {
 
     public static final int WINCH_MASTER_CAN_ID = 9;
 
@@ -107,8 +108,8 @@ public final class Constants {
 
     public static final int INTAKE_ROLLER_CAN_ID = 5;
 
-	  public static final int INTAKE_GATE_CAN_ID = 6;
-    	
+    public static final int INTAKE_GATE_CAN_ID = 6;
+
   }
 
   public static final class HopperConstants {
@@ -129,8 +130,8 @@ public final class Constants {
     static public int RB_BUTTON = 6;
     static public int BACK_BUTTON = 7;
     static public int START_BUTTON = 8;
-    static public int LEFT_AXIS = 9;
-    static public int RIGHT_AXIS = 10;
+    static public int LEFT_STICK = 9;
+    static public int RIGHT_STICK = 10;
 
     // Axis control mappings
     // Notes:
@@ -149,64 +150,60 @@ public final class Constants {
     static public int POV_RIGHT = 90;
     static public int POV_DOWNN = 180;
     static public int POV_LEFT = 270;
-    
-  }
-  public static final class PIDConstants{
-    
-      public static final double KS_FEEDFOWARD = 1.2;
 
-      public static final double KV_FEEDFOWARD = 0.329;
-
-      public static final double KA_FEEDFOWARD = 0.0933; 
-
-      public static final double OPTIMAL_KP = 4;
-  
-      public static final double OPTIMAL_KD = 4.51;
-      
   }
 
-  public static final class AutoAimConstants{
+  public static final class PIDConstants {
+
+    public static final double KS_FEEDFOWARD = 1.2;
+
+    public static final double KV_FEEDFOWARD = 0.329;
+
+    public static final double KA_FEEDFOWARD = 0.0933;
+
+    public static final double OPTIMAL_KP = 4;
+
+    public static final double OPTIMAL_KD = 4.51;
+
+  }
+
+  public static final class AutoAimConstants {
 
     public static final double KP_ROTATION_AUTOAIM = 0.025;
 
     public static final double KD_ROTATION_AUTOAIM = 0.0006;
 
-    
-
-    public static final double ANGLE_TOLERANCE = 1.0; //IN DEGREES 
+    public static final double ANGLE_TOLERANCE = 1.0; // IN DEGREES
 
     // public static final double ANGLE_SETPOINT = 90.0; //Testing
-    
+
   }
 
-  public static final class MiscConstants{
+  public static final class MiscConstants {
 
-    public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
-     new DifferentialDriveVoltageConstraint(
-        DriveConstants.SIMPLE_MOTOR_FEED_FOWARD,
-        DriveConstants.DRIVE_KINEMATICS,
-        DriveConstants.MAX_VOLTAGE_AUTO);
+    public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        DriveConstants.SIMPLE_MOTOR_FEED_FOWARD, DriveConstants.DRIVE_KINEMATICS, DriveConstants.MAX_VOLTAGE_AUTO);
 
     public static final double TURN_VOLTAGE_COMPENSATION_VOLTS = 5;
 
     public static final int PDP_CAN_ID = 0;
 
-	  public static final int PDP_CHANNEL_0 = 0;
-	  public static final int PDP_CHANNEL_1 = 1;
-	  public static final int PDP_CHANNEL_2 = 2;
-	  public static final int PDP_CHANNEL_3 = 3;
-	  public static final int PDP_CHANNEL_4 = 4;
-	  public static final int PDP_CHANNEL_5 = 5;
-	  public static final int PDP_CHANNEL_6 = 6;
-	  public static final int PDP_CHANNEL_7 = 7;
+    public static final int PDP_CHANNEL_0 = 0;
+    public static final int PDP_CHANNEL_1 = 1;
+    public static final int PDP_CHANNEL_2 = 2;
+    public static final int PDP_CHANNEL_3 = 3;
+    public static final int PDP_CHANNEL_4 = 4;
+    public static final int PDP_CHANNEL_5 = 5;
+    public static final int PDP_CHANNEL_6 = 6;
+    public static final int PDP_CHANNEL_7 = 7;
     public static final int PDP_CHANNEL_8 = 8;
     public static final int PDP_CHANNEL_9 = 9;
     public static final int PDP_CHANNEL_10 = 10;
     public static final int PDP_CHANNEL_11 = 11;
-	  public static final int PDP_CHANNEL_12 = 12;
-	  public static final int PDP_CHANNEL_13 = 13;
+    public static final int PDP_CHANNEL_12 = 12;
+    public static final int PDP_CHANNEL_13 = 13;
     public static final int PDP_CHANNEL_14 = 14;
-    
+
     public static final int ELEVATOR_LOW_SWITCH = 1;
 
     public static final int ELEVATOR_HIGH_SWITCH = 0;
@@ -222,17 +219,19 @@ public final class Constants {
 
   }
 
-  public static final class VoltageConstants{
+  public static final class VoltageConstants {
 
-	public static final double STOP = 0;
-	public static final double INDEX_WHEEL_SPEED = -1.0;
-	public static final double ELEVATOR_DOWN_VOLTAGE = 1.0;
-	public static final double ELEVATOR_UP_VOLTAGE = 3.0;
-	public static final double INTAKE_GATE_DOWN = .5;
-	public static final double INTAKE_GATE_UP_VOLTAGE = -4;
-	public static final double WINCH_DOWN_VOLTAGE = -4.0;
-  public static final double WINCH_UP_VOLTAGE = 11.5;
-  
+    public static final double STOP = 0;
+    public static final double INDEX_WHEEL_SPEED = 1.0;
+    public static final double ELEVATOR_DOWN_VOLTAGE = -1.0;
+    public static final double ELEVATOR_UP_VOLTAGE = 3.0;
+    public static final double INTAKE_GATE_DOWN = 1;
+    public static final double INTAKE_GATE_UP_VOLTAGE = -4;
+    public static final double WINCH_DOWN_VOLTAGE = -4.0;
+    public static final double WINCH_UP_VOLTAGE = 11.5;
+    public static final double INTAKE_WHEEL_SPEED_OUT = .5;
+    public static final double INTAKE_WHEEL_SPEED_IN = .5;
+
   }
 
 }

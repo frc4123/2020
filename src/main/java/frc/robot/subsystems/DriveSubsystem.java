@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -32,33 +33,36 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
 
-                                                  //** HARDWARE **\\
+  // ** HARDWARE **\\
 
   private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
   private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
-  private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);   
-  
+  private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
+
   private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
-  
+
   private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-  
+
   private final PowerDistributionPanel Pdp = new PowerDistributionPanel(MiscConstants.PDP_CAN_ID);
-  
-                                                   //**TRAJECTORY**\\
+
+  // **TRAJECTORY**\\
   DifferentialDriveOdometry odometry;
-  
-  SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD, PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
+
+  SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD,
+      PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
   PIDController leftPIDController = new PIDController(4, 0, 4.51);
   PIDController rightPIDController = new PIDController(4, 0, 4.51);
   Pose2d pose;
 
-
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
-    leftMaster.configClosedloopRamp(1);
-    rightMaster.configClosedloopRamp(1);
-  //check the ramp doesnt seem to work
+
+    leftMaster.setNeutralMode(NeutralMode.Brake);
+    rightMaster.setNeutralMode(NeutralMode.Brake);
+    leftSlave.setNeutralMode(NeutralMode.Brake);
+    rightSlave.setNeutralMode(NeutralMode.Brake);
+    // check the ramp doesnt seem to work
     rightSlave.follow(rightMaster);
     leftSlave.follow(leftMaster);
 
@@ -67,7 +71,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     resetEncoders();
 
-    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0 ,0, Rotation2d.fromDegrees(getHeading())));
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(0, 0, Rotation2d.fromDegrees(getHeading())));
 
   }
 
@@ -75,9 +80,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * 
    * @return Returns the differential drive object
    */
-  public DifferentialDrive getDifferentialDrive(){
-    return differentialDrive; 
+  public DifferentialDrive getDifferentialDrive() {
+    return differentialDrive;
   }
+
   /**
    * Drives the robot using arcade controls.
    *
@@ -86,68 +92,74 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void arcadeDrive(double fwd, double rot) {
 
-    differentialDrive.arcadeDrive(fwd, rot); 
+    differentialDrive.arcadeDrive(fwd, rot);
     differentialDrive.feed();
 
   }
 
+  @Log
   public double getHeading() {
 
-    //negative because of the unit circle
-    //IEEEremainder is pretty much just modulo
+    // negative because of the unit circle
+    // IEEEremainder is pretty much just modulo
     return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.IS_GYRO_REVERSED_FOR_PATHWEAVER ? -1.0 : 1.0);
 
-    }
+  }
 
   @Log
-  public double getGyroAngle(){
-    return -gyro.getAngle();
+  public double getGyroAngle() {
+    return gyro.getAngle();
   }
-     
-  public ADXRS450_Gyro getGyro(){
-      return gyro;
-    }
+
+  public ADXRS450_Gyro getGyro() {
+    return gyro;
+  }
+
+  public double getAverageEncoderDistanceMeters() {
+    return (getLeftWheelPositionMeters() + getRightWheelPositionMeters() / 2.0);
+  }
 
   /**
    * Returns the current of the specified channel in Amps
+   * 
    * @param channel The channel of the pdp
    * @return the current of the channel given
    */
-  double getPDPCurent(int channel){
-    return  Pdp.getCurrent(channel);
+  double getPDPCurent(int channel) {
+    return Pdp.getCurrent(channel);
   }
 
   /**
-   *  Returns the left wheel's position in meters
+   * Returns the left wheel's position in meters
+   * 
    * @return Wheel position in meters
    */
   @Log
-  public double getLeftPosition(){
+  public double getLeftWheelPositionMeters() {
 
     return
-      //1 or 10?
-      //get rid of magic numbers
-      leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER  
+    // 1 or 10?
+    // get rid of magic numbers
+    leftMaster.getSelectedSensorPosition() * DriveConstants.INVERT * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER
         * DriveConstants.WHEEL_CIRCUMFERENCE_METERS;
 
   }
 
-   /**
-   *  Returns the right wheel's position in meters
+  /**
+   * Returns the right wheel's position in meters
+   * 
    * @return Wheel position in meters
    */
   @Log
-  public double getRightPosition() {
+  public double getRightWheelPositionMeters() {
 
     return
-    //removedd the gear ratio because the position is is reading from the axel
-    rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER 
+    // removedd the gear ratio because the position is is reading from the axel
+    rightMaster.getSelectedSensorPosition(0) * DriveConstants.TICKS_TO_REVOLUTIOIN_MAG_ENCODER
         * DriveConstants.WHEEL_CIRCUMFERENCE_METERS;
 
   }
 
-
-  
   public SimpleMotorFeedforward getFeedfoward() {
 
     return driveFeedforward;
@@ -166,13 +178,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
-    /**
+  /**
    * Resets the drive encoders to currently read a position of 0.
    */
   public void resetEncoders() {
 
-   leftMaster.setSelectedSensorPosition(0, 0, 10);
-   rightMaster.setSelectedSensorPosition(0, 0, 10);
+    leftMaster.setSelectedSensorPosition(0, 0, 10);
+    rightMaster.setSelectedSensorPosition(0, 0, 10);
 
   }
 
@@ -185,8 +197,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   }
 
- 
-   /**
+  /**
    * Returns the currently-estimated pose of the robot.
    *
    * @return The pose.
@@ -196,9 +207,16 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return odometry.getPoseMeters();
 
   }
-  public void setOutput(double leftVolts, double rightVolts) {
-    leftMaster.setVoltage(leftVolts);
-    rightMaster.setVoltage(-rightVolts); 
+
+  public void setOutputVoltage(double leftVolts, double rightVolts) {
+    System.out.println(leftVolts);
+    System.out.println(rightVolts);
+    double leftcompvolts = leftVolts + 6.5;
+    double rightcompvolts = rightVolts - 6.5;
+    leftMaster.setVoltage(leftcompvolts);
+    rightMaster.setVoltage(-rightcompvolts);
+    System.out.println(leftcompvolts);
+    System.out.println(rightcompvolts);
 
     differentialDrive.feed();
   }
@@ -211,7 +229,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     rightMaster.enableVoltageCompensation(isEnabled);
   }
 
- 
   /**
    * Returns the current wheel speeds of the robot.
    *
@@ -219,78 +236,86 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
 
-    return new DifferentialDriveWheelSpeeds(getLeftWheelSpeed() ,getrightWheelSpeed());
+    return new DifferentialDriveWheelSpeeds(getLeftWheelSpeed(), getrightWheelSpeed());
 
   }
 
-   /**
-  * Returns the left wheel speed in meters per second
-  * @return left wheel speed in meters per second
-  */  
+  /**
+   * Returns the left wheel speed in meters per second
+   * 
+   * @return left wheel speed in meters per second
+   */
   public double getLeftWheelSpeed() {
 
-    return leftMaster.getSelectedSensorVelocity(0)  * DriveConstants.INVERT* DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER
-    * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
+    return leftMaster.getSelectedSensorVelocity(0) * DriveConstants.INVERT
+        * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
 
   }
 
-   /**
+  /**
    * Returns the right wheel speed in meters per second
    * 
    * @return right wheel speed in meters per second
    */
   public double getrightWheelSpeed() {
 
-    return rightMaster.getSelectedSensorVelocity(0)  * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER
+    return rightMaster.getSelectedSensorVelocity(0) * DriveConstants.TICKS_TO_REVOLUTION_SECONDS_MAG_ENCODER
         * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
 
   }
 
-//   public DifferentialDriveKinematics getKinematics() {
+  // public DifferentialDriveKinematics getKinematics() {
 
-//     return diffDriveKine;
-// }
+  // return diffDriveKine;
+  // }
 
-  public PIDController getLeftPIDController(){
+  public PIDController getLeftPIDController() {
 
-  return leftPIDController;
+    return leftPIDController;
 
-}
+  }
 
-  public PIDController getRightPIDController(){
+  public PIDController getRightPIDController() {
 
-  return rightPIDController;
+    return rightPIDController;
 
-}
+  }
+
   /**
- * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
-  *
-  * @param maxOutput the maximum output to which the drive will be constrained
-  */
+   * Sets the max output of the drive. Useful for scaling the drive to drive more
+   * slowly.
+   *
+   * @param maxOutput the maximum output to which the drive will be constrained
+   */
   public void setMaxOutput(double maxOutput) {
 
     differentialDrive.setMaxOutput(maxOutput);
-    
-}
+
+  }
 
   @Override
- public void periodic(){
+  public void periodic() {
 
-  odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftPosition(),
-    getRightPosition());
- 
+    odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelPositionMeters(), getRightWheelPositionMeters());
 
-  SmartDashboard.putNumber("Gyro Heading", getHeading());
-  SmartDashboard.getNumber("Gyro Setpoint", 0);
-  SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_0 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_1 , getPDPCurent(MiscConstants.PDP_CHANNEL_2));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_2 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_3 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_12 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_13, getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_14 , getPDPCurent(MiscConstants.PDP_CHANNEL_1));
-  
-}
- 
+    SmartDashboard.putNumber("Gyro Heading", getHeading());
+    SmartDashboard.getNumber("Gyro Setpoint", 0);
+    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_0,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_1,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_2));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_2,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_3,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_12,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_13,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+    SmartDashboard.putNumber("Pdp current for channel " + MiscConstants.PDP_CHANNEL_14,
+        getPDPCurent(MiscConstants.PDP_CHANNEL_1));
+
+  }
+
 }

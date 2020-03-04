@@ -8,7 +8,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
@@ -24,8 +23,6 @@ public class ShooterCommand extends CommandBase {
     // SmartDashboard.putNumber("shooter_top", 3);
     // SmartDashboard.putNumber("shooter_bottom", 3);
 
-
-
     this.shooterSubsystem = shooterSubsystem;
     addRequirements(shooterSubsystem);
   }
@@ -38,7 +35,7 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setTopShooterMotorVoltage(12);
+    shooterSubsystem.setTopShooterMotorVoltage(11.5);
     shooterSubsystem.setBottomShooterMotorVoltage(12);
   }
 

@@ -8,13 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.VoltageConstants;
 import frc.robot.subsystems.IndexSubsystem;
 
 public class IndexWheelCommand extends CommandBase {
-  
+
   IndexSubsystem hopperSubsystem;
-  
 
   /**
    * Creates a new HopperToShooterThingy.
@@ -28,12 +28,13 @@ public class IndexWheelCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    new WaitCommand(5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
     hopperSubsystem.indexMotorSpeed(VoltageConstants.INDEX_WHEEL_SPEED);
     System.out.println("Index" + VoltageConstants.INDEX_WHEEL_SPEED);
   }
@@ -42,6 +43,7 @@ public class IndexWheelCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     hopperSubsystem.indexMotorSpeed(VoltageConstants.STOP);
+
     System.out.println("index done");
   }
 
@@ -52,4 +54,4 @@ public class IndexWheelCommand extends CommandBase {
 
   }
 }
-//change the name of the command class
+// change the name of the command class

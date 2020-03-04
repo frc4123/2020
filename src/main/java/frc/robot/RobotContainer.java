@@ -7,33 +7,36 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
+// import java.io.IOException;
+// import java.nio.file.Paths;
+// import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+// import edu.wpi.first.wpilibj.trajectory.Trajectory;
+// import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+// import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+// import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+// import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+// import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+// import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import frc.robot.Constants.DriveConstants;
+// import edu.wpi.first.wpilibj.controller.RamseteController;
+// import edu.wpi.first.wpilibj.geometry.Pose2d;
+// import edu.wpi.first.wpilibj.geometry.Rotation2d;
+// import edu.wpi.first.wpilibj.geometry.Translation2d;
+// import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PS4ButtonConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.commands.AutoAngleCommand;
+import frc.robot.commands.AutoDriveBackCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
-// import frc.robot.commands.IndexToShooter;
 import frc.robot.commands.IndexWheelCommand;
 import frc.robot.commands.IntakeInCommand;
 import frc.robot.commands.IntakeOutCommand;
@@ -57,28 +60,29 @@ import frc.robot.subsystems.WinchSubsystem;
  * and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
+  // Subsystems
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final IndexSubsystem indexSubsystem = new IndexSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final WinchSubsystem winchSubsystem = new WinchSubsystem();
-  private final IndexSubsystem hopperSubsystem = new IndexSubsystem();
-
+  // Commands
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
-  private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
   private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
-  private final ShooterCommand shooterCommand = new ShooterCommand(shooterSubsystem);
-  private final WinchDownCommand winchDownCommand = new WinchDownCommand(winchSubsystem);
-  private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
+  private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
   private final IntakeGateDownCommand intakeGateDownCommand = new IntakeGateDownCommand(intakeSubsystem);
   private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
   private final IntakeInCommand intakeInCommand = new IntakeInCommand(intakeSubsystem);
   private final IntakeOutCommand intakeOutCommand = new IntakeOutCommand(intakeSubsystem);
-  private final IndexWheelCommand indexCommand = new IndexWheelCommand(hopperSubsystem);
-  //private final IndexToShooter indexToShooterCommand = new IndexToShooter(hopperSubsystem,shooterSubsystem);
+  // private final IndexWheelCommand indexCommand = new
+  // IndexWheelCommand(indexSubsystem);
+  // private final ShooterCommand shooterCommand = new
+  // ShooterCommand(shooterSubsystem);
+  private final WinchDownCommand winchDownCommand = new WinchDownCommand(winchSubsystem);
+  private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
 
-  public DriveSubsystem getDriveSubsystem(){
+  public DriveSubsystem getDriveSubsystem() {
     return driveSubsystem;
   }
 
@@ -90,8 +94,8 @@ public class RobotContainer {
   /**
    * Prints "Gyro is calibrating..." and calibrates the gyro.
    */
-  //put in robot init so it calibrates on turn on... maybe we want that?
-  private void calibrate(){
+  // put in robot init so it calibrates on turn on... maybe we want that?
+  private void calibrate() {
     System.out.println("Gyro is calibrating...");
     driveSubsystem.getGyro().calibrate();
   }
@@ -102,115 +106,54 @@ public class RobotContainer {
   public RobotContainer() {
 
     calibrate();
-
     // Configure the button bindings
     configureButtonBindings();
-
     // Configure default commands
-
-    // Set the default drive command to split-stick arcade drive
-    
-    driveSubsystem
-        .setDefaultCommand(new RunCommand(() -> {
-          driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
-          driverController.getX(GenericHID.Hand.kRight)); 
-          driveSubsystem.getDifferentialDrive().feed();
-        }, driveSubsystem));
+    driveSubsystem.setDefaultCommand(new RunCommand(() -> {
+      driveSubsystem.getDifferentialDrive().feed();
+      driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
+          driverController.getX(GenericHID.Hand.kRight));
+      // System.out.println("Driver turn" +
+      // driverController.getX(GenericHID.Hand.kRight));
+    }, driveSubsystem));
 
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by instantiating a {@link GenericHID} or one of its subclasses
-   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
+  // Use this method to define your button->command mappings.
   private void configureButtonBindings() {
-  
-   
 
-    
+    // shoot sequence
+    new JoystickButton(driverController, XboxConstants.A_BUTTON).whileHeld(
+        autoAimCommand.andThen(new ShooterCommand(shooterSubsystem).alongWith(new IndexWheelCommand(indexSubsystem))));
+    // .andThen(teleshootfromdistance));
+    new JoystickButton(driverController, XboxConstants.LEFT_STICK).whenPressed(() -> driveSubsystem.setMaxOutput(.5))
+        .whenReleased(() -> driveSubsystem.setMaxOutput(1));
+    new JoystickButton(driverController, XboxConstants.RIGHT_STICK).whenPressed(() -> driveSubsystem.setMaxOutput(.5))
+        .whenReleased(() -> driveSubsystem.setMaxOutput(1));
+    new JoystickButton(driverController, XboxConstants.X_BUTTON).whileHeld(intakeGateDownCommand);
+    new JoystickButton(driverController, XboxConstants.Y_BUTTON).whileHeld(intakeGateUpCommand);
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(intakeInCommand);
     new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(intakeOutCommand);
-    new JoystickButton(driverController, PS4ButtonConstants.X_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(driverController, PS4ButtonConstants.SQUARE_BUTTON).whileHeld(intakeGateDownCommand);
-    new JoystickButton(driverController, PS4ButtonConstants.TRIANGLE_BUTTON).whileHeld(intakeGateUpCommand);
-    //new JoystickButton(driverController, XboxConstants.B_BUTTON).whileHeld(shooterCommand);
-    //give elevator to aux. make intake roller triggers. make 
-    //driver
-    //    triggers -> intake roller
-    //    bumpers -> winch
-    //    x is auto aim
-    //    intake gate square and triangle
-    //aux
-    //    manual shoot ->  
-
-    //also can be one button pressed until the limit swtich is hit
-    //new JoystickButton(auxDriverController, XboxConstants.X_BUTTON).whenPressed(indexCommand.withTimeout(.5));
-    
-    new JoystickButton(auxDriverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
+    // gate auto goes up?
+    // auxcommands
     new JoystickButton(auxDriverController, XboxConstants.RB_BUTTON).whileHeld(elevatorDownCommand);
-    new JoystickButton(auxDriverController, XboxConstants.X_BUTTON).whileHeld(shooterCommand);
+    new JoystickButton(auxDriverController, XboxConstants.LB_BUTTON).whileHeld(elevatorUpCommand);
+    // new JoystickButton(auxDriverController,
+    // XboxConstants.Y_BUTTON).whileHeld(indexCommand);
+    // new JoystickButton(auxDriverController,
+    // XboxConstants.X_BUTTON).whileHeld(shooterCommand);
     new JoystickButton(auxDriverController, XboxConstants.A_BUTTON).whileHeld(winchDownCommand);
     new JoystickButton(auxDriverController, XboxConstants.B_BUTTON).whileHeld(winchUpCommand);
-    new JoystickButton(auxDriverController, XboxConstants.Y_BUTTON).whileHeld(indexCommand);
-    
+
   }
-
-  Trajectory trajectory;
-
-  
 
   public Command getAutonomousCommand() {
-    TrajectoryConfig config =
-
-      new TrajectoryConfig(DriveConstants.MAX_METERS_PER_SECOND,
-                         DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-        .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
-      
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)), 
-      
-      List.of(
-        new Translation2d(.5, 0)
-        ),
-
-      new Pose2d(1, 0, new Rotation2d(0)),
-      
-      config);
-  //  try{
-
-   // Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/valley.wpilib.json"));
-       
-      RamseteCommand command = new RamseteCommand(
-       trajectory,
-       driveSubsystem::getPose,
-       new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
-       driveSubsystem.getFeedfoward(),
-       DriveConstants.DRIVE_KINEMATICS,
-       driveSubsystem::getWheelSpeeds,
-       driveSubsystem.getLeftPIDController(),
-       driveSubsystem.getRightPIDController(),
-       driveSubsystem::setOutput,
-       driveSubsystem 
-      );
-
-     
-   
-   //ramsete does not auto send a 0,0 to the output
-    return command.andThen(() -> driveSubsystem.setOutput(0, 0));
-
-    // } catch(IOException ex){
-    //   System.out.println("Unable to open trajectory" );
-
-    // }
-    
-    // return null;
+    // Must be aligned to the bottom left corner; middle wheel on the initiation
+    // line.
+    CommandGroupBase.clearGroupedCommands();
+    return new AutoDriveBackCommand(driveSubsystem).andThen(new WaitCommand(.2)
+        .andThen(new ShooterCommand(shooterSubsystem)).alongWith(new IndexWheelCommand(indexSubsystem).withTimeout(7)));
 
   }
-  // auto chooser for SD??
-  //return chooser.getSelected(); 
-  
+
 }

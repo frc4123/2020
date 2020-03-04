@@ -31,9 +31,11 @@ public class IndexSubsystem extends SubsystemBase {
 
   /**
    * Set the speed for the index motor
+   * 
    * @param speed takes in double between -1.0 and 1.0
    */
-  public void indexMotorSpeed(double speed){
+  public void indexMotorSpeed(double speed) {
     indexMotor.set(speed);
+    indexMotor.feed();
   }
 }

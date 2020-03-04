@@ -7,104 +7,87 @@
 
 package frc.robot.commands;
 
-//** DO NOT USE THIS CLASS **/
-
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.AutoAimConstants;
-// import frc.robot.Constants.AutoAimConstants;
+import frc.robot.Constants.MiscConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.htm
+// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class TurnToAngleCommand extends PIDCommand {
   /**
-   * Creates a new TurnToAngle.
+   * Creates a new PIDCommandDebug.
    */
-   static double setpoint;
-   DriveSubsystem driveSubsystem;
-   double thePerticularChangeInAnglularPositionWeWouldLike;
 
-   public TurnToAngleCommand(DriveSubsystem driveSubsystem) {
+  DriveSubsystem driveSubsystem;
+  double theParticularChangeInAnglularPositionWeWouldLike;
+  static double setterpoint;
 
-   //setpoint = driveSubsystem.getGyroAngle() - AutoAimConstants.ANGLE_SETPOINT;
-
+  public TurnToAngleCommand(DriveSubsystem driveSubsystem) {
 
     super(
         // The controller that the command will use
-        new PIDController(.05, 0.006, .01),
+        new PIDController(1.5, 0.1, .1),
         // This should return the measurement
         () -> driveSubsystem.getGyroAngle(),
         // This should return the setpoint (can also be a constant)
-        () -> setpoint,
+        () -> setterpoint,
         // This uses the output
-        output -> 
-         // Use the output here
-         driveSubsystem.setOutput(output, -output)
-         //System.out.println("OUTPUT " + output);
-        , driveSubsystem);
+        output -> {
+          output += Math.signum(output) * 13;
+          // Use the output here
+          driveSubsystem.setOutputVoltage(output, -output);
+        }, driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
-     
-    // getController().enableContinuousInput(0, 360);
+    // Configure additional PID options by calling `getController` here.
     getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
-  
     this.driveSubsystem = driveSubsystem;
+    System.out.println("setterpoint: " + setterpoint);
 
   }
-    // Configure additional PID options by calling `getController` here.
-
-  @Override
-  public void initialize() {
-    
-    // setpoint = driveSubsystem.getGyroAngle() - 90;
-    // driveSubsystem.setVoltageCompensation(true, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
-    super.initialize();
-   setpoint = driveSubsystem.getGyroAngle() - thePerticularChangeInAnglularPositionWeWouldLike;
-    
-
-    
- }
-
- /**
-  * @param thePerticularChangeInAnglularPositionWeWouldLike the thePerticularChangeInAnglularPositionWeWouldLike to set
-  */
- public void setThePerticularChangeInAnglularPositionWeWouldLike(double thePerticularChangeInAnglularPositionWeWouldLike) {
-   this.thePerticularChangeInAnglularPositionWeWouldLike = thePerticularChangeInAnglularPositionWeWouldLike;
- }
-
-
- @Override
- public void execute() {
-   super.execute();
-   System.out.println("turntoangle_position_error" + getController().getPositionError());
- }
-
-  
-   
-//  @Override
-//  public void schedule(boolean interruptible) {
-   
-//    super.schedule(interruptible);
-
-//    getController().setP(SmartDashboard.getNumber("angle_controller_kp", 0));
-//    getController().setI(SmartDashboard.getNumber("angle_controller_ki", 0));
-//    getController().setD(SmartDashboard.getNumber("angle_controller_kd", 0));
-//  }
-
-//  @Override
-//  public void end(boolean interrupted) {
-//    super.end(interrupted);
-//    driveSubsystem.setVoltageCompensation(false, Constants.TURN_VOLTAGE_COMPENSATION_VOLTS);
-//  }
-
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    System.out.println("isFinished: " +  getController().atSetpoint());
-    return  getController().atSetpoint();
-    
+  public void initialize() {
 
+    driveSubsystem.setVoltageCompensation(true, MiscConstants.TURN_VOLTAGE_COMPENSATION_VOLTS);
+    // Enable this ^ for auto aim
+    setterpoint = driveSubsystem.getGyroAngle() - theParticularChangeInAnglularPositionWeWouldLike;
+
+    super.initialize();
+    System.out.println("Initialized pidcommand");
+
+  }
+
+  public void setThePerticularChangeInAnglularPositionWeWouldLike(
+      double thePerticularChangeInAnglularPositionWeWouldLike) {
+    this.theParticularChangeInAnglularPositionWeWouldLike = thePerticularChangeInAnglularPositionWeWouldLike;
+  }
+
+  @Override
+  public void execute() {
+    System.out.println("turntoangle_position_error " + getController().getPositionError());
+    super.execute();
+  }
+
+  @Override
+  public void schedule(boolean interruptible) {
+    super.schedule(interruptible);
+    System.out.println("Schedule");
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    System.out.println("end");
+    driveSubsystem.setVoltageCompensation(false, MiscConstants.TURN_VOLTAGE_COMPENSATION_VOLTS);
+  }
+
+  @Override
+  public boolean isFinished() {
+
+    return getController().atSetpoint();
   }
 }
