@@ -44,7 +44,7 @@ public class ShootWithDistanceCommand extends CommandBase {
 
     boolean threeMeters = (targetDistance <= 3);
     boolean threeToFourMeters = (targetDistance > 3 && targetDistance <= 4);
-    boolean fourToSixMeters = (targetDistance > 8 && targetDistance <= 10);
+    boolean fourToSixMeters = (targetDistance > 4 && targetDistance <= 6);
 
     if (threeMeters) {
       topVoltage = 5;
