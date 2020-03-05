@@ -43,7 +43,6 @@ import frc.robot.commands.IntakeOutCommand;
 import frc.robot.commands.IntakeGateDownCommand;
 import frc.robot.commands.IntakeGateUpCommand;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.WinchDownCommand;
 import frc.robot.commands.WinchUpCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -75,26 +74,18 @@ public class RobotContainer {
   private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
   private final IntakeInCommand intakeInCommand = new IntakeInCommand(intakeSubsystem);
   private final IntakeOutCommand intakeOutCommand = new IntakeOutCommand(intakeSubsystem);
-  // private final IndexWheelCommand indexCommand = new
-  // IndexWheelCommand(indexSubsystem);
-  // private final ShooterCommand shooterCommand = new
-  // ShooterCommand(shooterSubsystem);
-  private final WinchDownCommand winchDownCommand = new WinchDownCommand(winchSubsystem);
   private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
+
+  XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  Joystick auxDriverController = new Joystick(OIConstants.AUXDRIVER_CONTROLLER_PORT);
 
   public DriveSubsystem getDriveSubsystem() {
     return driveSubsystem;
   }
 
-  // The driver's controller
-  XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
-  // aux driver
-  Joystick auxDriverController = new Joystick(OIConstants.AUXDRIVER_CONTROLLER_PORT);
-
   /**
    * Prints "Gyro is calibrating..." and calibrates the gyro.
    */
-  // put in robot init so it calibrates on turn on... maybe we want that?
   private void calibrate() {
     System.out.println("Gyro is calibrating...");
     driveSubsystem.getGyro().calibrate();
@@ -112,8 +103,6 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new RunCommand(() -> {
       driveSubsystem.arcadeDrive(-driverController.getY(GenericHID.Hand.kLeft),
           driverController.getX(GenericHID.Hand.kRight));
-      // System.out.println("Driver turn" +
-      // driverController.getX(GenericHID.Hand.kRight));
     }, driveSubsystem));
 
   }
@@ -134,17 +123,17 @@ public class RobotContainer {
     new JoystickButton(driverController, XboxConstants.LB_BUTTON).whileHeld(elevatorDownCommand);
     new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorUpCommand);
 
-    // auxcommands]\
-
-    new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON).whileHeld(winchDownCommand);
+    // auxcommands\
+    // new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON);
     new JoystickButton(auxDriverController, LogitecController.FOUR_BUTTON).whileHeld(winchUpCommand);
     new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON).whileHeld(new ShooterCommand(shooterSubsystem)
-        .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
+    new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
+        .whileHeld(new ShooterCommand(shooterSubsystem)
+            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
-    new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whenPressed( ()->driveSubsystem.setMaxOutput(.4)).whenReleased(()->driveSubsystem.setMaxOutput(1));
-    //.whenPressed(()->driveSubsystem.setMaxOutput(.4)).whenReleased(()->driveSubsystem.setMaxOutput(1));
+    new JoystickButton(auxDriverController, LogitecController.RB_BUTTON)
+        .whenPressed(() -> driveSubsystem.setMaxOutput(.4)).whenReleased(() -> driveSubsystem.setMaxOutput(1));
 
   }
 
@@ -154,8 +143,10 @@ public class RobotContainer {
     // clear the command group to use it again, dont do this in teleop
     CommandGroupBase.clearGroupedCommands();
 
-    return new AutoDriveBackCommand(driveSubsystem).andThen(new WaitCommand(.2)
-        .andThen(new ShooterCommand(shooterSubsystem)).alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem).withTimeout(7))));
+    // if this stops working move the with timeout to after "(indexSubsytem"
+    return new AutoDriveBackCommand(driveSubsystem)
+        .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
 
   }
 
