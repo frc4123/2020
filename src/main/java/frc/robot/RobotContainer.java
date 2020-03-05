@@ -143,6 +143,8 @@ public class RobotContainer {
         .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
+    new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whenPressed( ()->driveSubsystem.setMaxOutput(.4)).whenReleased(()->driveSubsystem.setMaxOutput(1));
+    //.whenPressed(()->driveSubsystem.setMaxOutput(.4)).whenReleased(()->driveSubsystem.setMaxOutput(1));
 
   }
 
