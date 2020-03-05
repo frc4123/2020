@@ -91,6 +91,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     
   }
 
+
+  public void stopMotors(){
+    differentialDrive.stopMotor();
+  }
   @Log
   public double getHeading() {
 

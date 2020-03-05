@@ -27,42 +27,41 @@ public class TurnToAngleCommand extends PIDCommand {
 
   public TurnToAngleCommand(DriveSubsystem driveSubsystem) {
 
-    super(
-        // The controller that the command will use
-        new PIDController(1.01 
-        , 0.1, .005),
+    super(new PIDController(1.0, 0.08, .005),
         // This should return the measurement
         () -> driveSubsystem.getGyroAngle(),
-        // This should return the setpoint (can also be a constant)
+        // TThe setpoint
         () -> setterpoint,
-        // This uses the output
+        // Output consumer
         output -> {
           output += Math.signum(output) * 2.9;
-          // Use the output here
+
           driveSubsystem.setOutputVoltage(output, -output);
+
         }, driveSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
+
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
-    this.driveSubsystem = driveSubsystem;
-    // System.out.println("setterpoint: " + setterpoint);
+    // if it oscillates uncomment the line bellow
+    // getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
+
     getController().setIntegratorRange(-1.5, 1.5);
 
+    this.driveSubsystem = driveSubsystem;
   }
 
-  // Returns true when the command should end.
   @Override
   public void initialize() {
 
     driveSubsystem.setVoltageCompensation(true, MiscConstants.TURN_VOLTAGE_COMPENSATION_VOLTS);
     // Enable this ^ for auto aim
+    // set this class's setterpoint by finding error with the passed in setpoint
     setterpoint = driveSubsystem.getGyroAngle() - theParticularChangeInAnglularPositionWeWouldLike;
 
     super.initialize();
-    // System.out.println("Initialized pidcommand");
 
   }
 
+  // method for passing in setpoint
   public void setThePerticularChangeInAnglularPositionWeWouldLike(
       double thePerticularChangeInAnglularPositionWeWouldLike) {
     this.theParticularChangeInAnglularPositionWeWouldLike = thePerticularChangeInAnglularPositionWeWouldLike;
@@ -70,7 +69,8 @@ public class TurnToAngleCommand extends PIDCommand {
 
   @Override
   public void execute() {
-    // System.out.println("turntoangle_position_error " + getController().getPositionError());
+    // System.out.println("turntoangle_position_error " +
+    // getController().getPositionError());
     super.execute();
   }
 
@@ -83,7 +83,6 @@ public class TurnToAngleCommand extends PIDCommand {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    // System.out.println("end");
     driveSubsystem.setVoltageCompensation(false, MiscConstants.TURN_VOLTAGE_COMPENSATION_VOLTS);
   }
 

@@ -24,7 +24,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Log
   public void setElevatorSpeed(double speed) {
-    // System.out.println("elevator set voltage: " + voltage);
     elevatorMotor.set(speed);
   }
 
