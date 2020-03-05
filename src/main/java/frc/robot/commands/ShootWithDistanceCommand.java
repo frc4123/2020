@@ -24,7 +24,8 @@ public class ShootWithDistanceCommand extends CommandBase {
 
   NetworkTableEntry target3D;
 
-  double setTargetDistance;
+  double topVoltage;
+  double botVoltage;
 
   public ShootWithDistanceCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,16 +42,22 @@ public class ShootWithDistanceCommand extends CommandBase {
     double[] defaultArray = { 0.0, 0.0, 0.0 };
     double targetDistance = target3D.getDoubleArray(defaultArray)[0];
 
-    boolean threeMeters = targetDistance <= 3;
-    boolean threeToEightMeters = targetDistance > 3 && targetDistance <= 8;
-    boolean eightToTenMeters = targetDistance > 8 && targetDistance <= 10;
+    boolean threeMeters = (targetDistance <= 3);
+    boolean threeToFourMeters = (targetDistance > 3 && targetDistance <= 4);
+    boolean fourToSixMeters = (targetDistance > 8 && targetDistance <= 10);
 
     if (threeMeters) {
-      setTargetDistance = 3;
-    } else if (threeToEightMeters) {
-      setTargetDistance = 5;
-    } else if (eightToTenMeters) {
-      setTargetDistance = 10;
+      topVoltage = 5;
+      botVoltage = 12;
+    } else if (threeToFourMeters) {
+      topVoltage = 11;
+      botVoltage = 12;
+    } else if (fourToSixMeters) {
+      topVoltage = 12;
+      botVoltage = 12;
+    } else if (fourToSixMeters) {
+      topVoltage = 12;
+      botVoltage = 11.7;
     }
   }
 
@@ -58,8 +65,8 @@ public class ShootWithDistanceCommand extends CommandBase {
   @Override
   public void execute() {
     getDistance();
-    shooterSubsystem.setTopShooterMotorVoltage(setTargetDistance);
-    shooterSubsystem.setBottomShooterMotorVoltage(setTargetDistance);
+    shooterSubsystem.setTopShooterMotorVoltage(topVoltage);
+    shooterSubsystem.setBottomShooterMotorVoltage(botVoltage);
   }
 
   // Called once the command ends or is interrupted.
