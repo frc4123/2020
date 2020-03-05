@@ -29,14 +29,14 @@ public class TurnToAngleCommand extends PIDCommand {
 
     super(
         // The controller that the command will use
-        new PIDController(1.2, 0.1, .1),
+        new PIDController(1.0, 0.1, .005),
         // This should return the measurement
         () -> driveSubsystem.getGyroAngle(),
         // This should return the setpoint (can also be a constant)
         () -> setterpoint,
         // This uses the output
         output -> {
-          output += Math.signum(output) * 13;
+          output += Math.signum(output) * 2.9;
           // Use the output here
           driveSubsystem.setOutputVoltage(output, -output);
         }, driveSubsystem);
@@ -45,6 +45,7 @@ public class TurnToAngleCommand extends PIDCommand {
     getController().setTolerance(AutoAimConstants.ANGLE_TOLERANCE);
     this.driveSubsystem = driveSubsystem;
     // System.out.println("setterpoint: " + setterpoint);
+    getController().setIntegratorRange(-1.5, 1.5);
 
   }
 
