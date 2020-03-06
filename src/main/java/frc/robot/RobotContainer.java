@@ -40,6 +40,7 @@ import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.IndexWheelCommand;
 import frc.robot.commands.IntakeInCommand;
 import frc.robot.commands.IntakeOutCommand;
+import frc.robot.commands.ShootWithDistanceCommand;
 import frc.robot.commands.IntakeGateDownCommand;
 import frc.robot.commands.IntakeGateUpCommand;
 import frc.robot.commands.ShooterCommand;
@@ -124,12 +125,15 @@ public class RobotContainer {
     new JoystickButton(driverController, XboxConstants.RB_BUTTON).whileHeld(elevatorUpCommand);
 
     // auxcommands\
-    // new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON);
+    new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON)
+        .whileHeld(new ShootWithDistanceCommand(shooterSubsystem)
+            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.FOUR_BUTTON).whileHeld(winchUpCommand);
     new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
-    new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
-        .whileHeld(new ShooterCommand(shooterSubsystem)
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
+    // new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
+    // .whileHeld(new ShooterCommand(shooterSubsystem)
+    // .alongWith(new WaitCommand(1).andThen(new
+    // IndexWheelCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON)

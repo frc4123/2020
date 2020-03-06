@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.AutoAimConstants;
 import frc.robot.Constants.MiscConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -34,7 +33,7 @@ public class TurnToAngleCommand extends PIDCommand {
         () -> setterpoint,
         // Output consumer
         output -> {
-          output += Math.signum(output) * 2.9;
+          output += Math.signum(output) * 2.5;
 
           driveSubsystem.setOutputVoltage(output, -output);
 
