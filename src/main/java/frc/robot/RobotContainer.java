@@ -7,12 +7,25 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 // import java.io.IOException;
 // import java.nio.file.Paths;
 // import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 // import edu.wpi.first.wpilibj.trajectory.Trajectory;
 // import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 // import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -20,11 +33,13 @@ import edu.wpi.first.wpilibj.XboxController;
 // import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 // import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.LogitecController;
 // import edu.wpi.first.wpilibj.controller.RamseteController;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -136,8 +151,70 @@ public class RobotContainer {
         .whenPressed(() -> driveSubsystem.setMaxOutput(.4)).whenReleased(() -> driveSubsystem.setMaxOutput(1));
 
   }
+  
+  
 
   public Command getAutonomousCommand() {
+
+    TrajectoryConfig config =
+
+  new TrajectoryConfig(DriveConstants.MAX_METERS_PER_SECOND,
+                     DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(DriveConstants.DRIVE_KINEMATICS)
+    .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
+  
+// Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+//   new Pose2d(0, 0, new Rotation2d(0)), 
+  
+//   List.of(
+//     new Translation2d(.5, 0)
+//     ),
+
+//   new Pose2d(1, 0, new Rotation2d(0)),
+  
+//   config);
+//  try{
+
+Trajectory trajectory;
+String trajectoryJSON = "paths/Straight.wpilib.json";
+try {
+  Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+   trajectory = TrajectoryUtil.fromPathweaverJson(
+    trajectoryPath
+    // Paths.get("/home/lvuser/deploy/paths/valley.wpilib.json")
+    );
+
+        
+// Trajectory trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
+  RamseteCommand command = new RamseteCommand(
+    trajectory,
+    driveSubsystem::getPose,
+    new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
+    new SimpleMotorFeedforward(DriveConstants.ksVolts,
+                               DriveConstants.kvVoltSecondsPerMeter,
+                               DriveConstants.kaVoltSecondsSquaredPerMeter),
+    DriveConstants.DRIVE_KINEMATICS,
+    driveSubsystem::getWheelSpeeds,
+    new PIDController(0, 0, 0),
+    new PIDController(0, 0, 0),
+    // RamseteCommand passes volts to the callback
+    driveSubsystem::setOutputVoltage,
+    driveSubsystem
+  );
+
+  //ramsete does not auto send a 0,0 to the output
+return command.andThen(() -> driveSubsystem.setOutputVoltage(0, 0));
+} catch (IOException ex) {
+  DriverStation.reportError("Unable to open trajectory:" + trajectoryJSON, ex.getStackTrace());
+}
+
+
+
+
+
+// return null;
+
     // Must be aligned to the bottom left corner; middle wheel on the initiation
     // line.
     // clear the command group to use it again, dont do this in teleop
