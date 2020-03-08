@@ -176,19 +176,17 @@ public class RobotContainer {
 //   config);
 //  try{
 
-Trajectory trajectory;
-String trajectoryJSON = "paths/Straight.wpilib.json";
+// Trajectory trajectory;
+// String trajectoryJSON = "paths/Straight.wpilib.json";
+// Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+// trajectory = TrajectoryUtil.fromPathweaverJson(
+//  trajectoryPath
+ // Paths.get("/home/lvuser/deploy/paths/valley.wpilib.json")
 try {
-  Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-   trajectory = TrajectoryUtil.fromPathweaverJson(
-    trajectoryPath
-    // Paths.get("/home/lvuser/deploy/paths/valley.wpilib.json")
-    );
+  Trajectory trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
 
-        
-// Trajectory trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
   RamseteCommand command = new RamseteCommand(
-    trajectory,
+    trajectory2,
     driveSubsystem::getPose,
     new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
     new SimpleMotorFeedforward(DriveConstants.ksVolts,
@@ -196,18 +194,23 @@ try {
                                DriveConstants.kaVoltSecondsSquaredPerMeter),
     DriveConstants.DRIVE_KINEMATICS,
     driveSubsystem::getWheelSpeeds,
-    new PIDController(0, 0, 0),
-    new PIDController(0, 0, 0),
+    driveSubsystem.getLeftPIDController(),
+    driveSubsystem.getRightPIDController(),
+
     // RamseteCommand passes volts to the callback
     driveSubsystem::setOutputVoltage,
     driveSubsystem
   );
+return command.andThen(()-> driveSubsystem.setOutputVoltage(0, 0));
+    } 
+    
+  catch (IOException ex) {
+  DriverStation.reportError("Unable to open trajectory:" + false, false);
+}
+        
 
   //ramsete does not auto send a 0,0 to the output
-return command.andThen(() -> driveSubsystem.setOutputVoltage(0, 0));
-} catch (IOException ex) {
-  DriverStation.reportError("Unable to open trajectory:" + trajectoryJSON, ex.getStackTrace());
-}
+return null;
 
 
 
@@ -218,12 +221,12 @@ return command.andThen(() -> driveSubsystem.setOutputVoltage(0, 0));
     // Must be aligned to the bottom left corner; middle wheel on the initiation
     // line.
     // clear the command group to use it again, dont do this in teleop
-    CommandGroupBase.clearGroupedCommands();
+    // CommandGroupBase.clearGroupedCommands();
 
-    // if this stops working move the with timeout to after "(indexSubsytem"
-    return new AutoDriveBackCommand(driveSubsystem)
-        .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
+    // // if this stops working move the with timeout to after "(indexSubsytem"
+    // return new AutoDriveBackCommand(driveSubsystem)
+    //     .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+    //         .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
 
   }
 
