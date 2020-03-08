@@ -25,9 +25,6 @@ public final class Constants {
 
   public static final class DriveConstants {
 
-    public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
 
     public static final int LEFT_DRIVE_MASTER_CAN_ID = 1;
 

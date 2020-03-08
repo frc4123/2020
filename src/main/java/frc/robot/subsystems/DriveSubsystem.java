@@ -32,34 +32,46 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   // ** HARDWARE **\\
 
-  private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
-  private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
-  private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
-  private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
+  private WPI_TalonSRX leftMaster;
+  //  = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
+  private WPI_VictorSPX leftSlave;
+  //  = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
+  private WPI_TalonSRX rightMaster;
+  //  = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
+  private WPI_VictorSPX rightSlave;
+  //  = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
 
-  private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
+  private DifferentialDrive diffDrive;
 
-  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+  private ADXRS450_Gyro gyro;
 
   // **TRAJECTORY**\\
   DifferentialDriveOdometry odometry;
 
   SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(PIDConstants.KS_FEEDFOWARD,
-      PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
+  PIDConstants.KV_FEEDFOWARD, PIDConstants.KA_FEEDFOWARD);
   PIDController leftPIDController = new PIDController(4, 0, 4.51);
   PIDController rightPIDController = new PIDController(4, 0, 4.51);
   Pose2d pose;
 
   public DriveSubsystem() {
-    // Sets the distance per pulse for the encoders
+    leftMaster  = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
+    rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
+    leftSlave  = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
+    rightSlave  = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
+    gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+    diffDrive = new DifferentialDrive(leftMaster, rightMaster);
+ 
+    leftSlave.follow(leftMaster);
+    rightSlave.follow(rightMaster);
 
+    // Sets the distance per pulse for the encoders
+  
     leftMaster.setNeutralMode(NeutralMode.Brake);
     rightMaster.setNeutralMode(NeutralMode.Brake);
     leftSlave.setNeutralMode(NeutralMode.Brake);
     rightSlave.setNeutralMode(NeutralMode.Brake);
     // check the ramp doesnt seem to work
-    rightSlave.follow(rightMaster);
-    leftSlave.follow(leftMaster);
 
     leftMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     rightMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -76,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * @return Returns the differential drive object
    */
   public DifferentialDrive getDifferentialDrive() {
-    return differentialDrive;
+    return diffDrive;
   }
 
   /**
@@ -87,13 +99,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void arcadeDrive(double fwd, double rot) {
 
-    differentialDrive.arcadeDrive(fwd, rot);
+    diffDrive.arcadeDrive(fwd, rot);
     
   }
 
 
   public void stopMotors(){
-    differentialDrive.stopMotor();
+    diffDrive.stopMotor();
   }
   @Log
   public double getHeading() {
@@ -202,7 +214,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     leftMaster.setVoltage(leftVolts);
     rightMaster.setVoltage(-rightVolts);
 
-    differentialDrive.feed();
+    diffDrive.feed();
   }
 
   public void setVoltageCompensation(boolean isEnabled, double volts) {
@@ -273,7 +285,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void setMaxOutput(double maxOutput) {
 
-    differentialDrive.setMaxOutput(maxOutput);
+    diffDrive.setMaxOutput(maxOutput);
 
   }
 

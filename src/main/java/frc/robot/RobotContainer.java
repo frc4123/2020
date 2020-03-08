@@ -156,77 +156,17 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    TrajectoryConfig config =
 
-  new TrajectoryConfig(DriveConstants.MAX_METERS_PER_SECOND,
-                     DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-    // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-    .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
-  
-// Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-//   new Pose2d(0, 0, new Rotation2d(0)), 
-  
-//   List.of(
-//     new Translation2d(.5, 0)
-//     ),
-
-//   new Pose2d(1, 0, new Rotation2d(0)),
-  
-//   config);
-//  try{
-
-// Trajectory trajectory;
-// String trajectoryJSON = "paths/Straight.wpilib.json";
-// Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-// trajectory = TrajectoryUtil.fromPathweaverJson(
-//  trajectoryPath
- // Paths.get("/home/lvuser/deploy/paths/valley.wpilib.json")
-try {
-  Trajectory trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
-
-  RamseteCommand command = new RamseteCommand(
-    trajectory2,
-    driveSubsystem::getPose,
-    new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
-    new SimpleMotorFeedforward(DriveConstants.ksVolts,
-                               DriveConstants.kvVoltSecondsPerMeter,
-                               DriveConstants.kaVoltSecondsSquaredPerMeter),
-    DriveConstants.DRIVE_KINEMATICS,
-    driveSubsystem::getWheelSpeeds,
-    driveSubsystem.getLeftPIDController(),
-    driveSubsystem.getRightPIDController(),
-
-    // RamseteCommand passes volts to the callback
-    driveSubsystem::setOutputVoltage,
-    driveSubsystem
-  );
-return command.andThen(()-> driveSubsystem.setOutputVoltage(0, 0));
-    } 
-    
-  catch (IOException ex) {
-  DriverStation.reportError("Unable to open trajectory:" + false, false);
-}
-        
-
-  //ramsete does not auto send a 0,0 to the output
-return null;
-
-
-
-
-
-// return null;
 
     // Must be aligned to the bottom left corner; middle wheel on the initiation
     // line.
     // clear the command group to use it again, dont do this in teleop
-    // CommandGroupBase.clearGroupedCommands();
+    CommandGroupBase.clearGroupedCommands();
 
-    // // if this stops working move the with timeout to after "(indexSubsytem"
-    // return new AutoDriveBackCommand(driveSubsystem)
-    //     .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
-    //         .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
+    // if this stops working move the with timeout to after "(indexSubsytem"
+    return new AutoDriveBackCommand(driveSubsystem)
+        .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
 
   }
 

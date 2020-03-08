@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+// import org.junit.*;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -48,4 +50,9 @@ public class autoTrajectory {
                         new PIDController(PIDConstants.OPTIMAL_KP, 0, 0),
                         new PIDController(PIDConstants.OPTIMAL_KP, 0, 0), driveSubsystem::setOutputVoltage, driveSubsystem);
 }
+// @Test
+public void trytest() {
+    getRamsete(trajectory2);
+}
+
 }
