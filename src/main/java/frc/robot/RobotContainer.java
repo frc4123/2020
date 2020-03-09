@@ -33,18 +33,18 @@ import frc.robot.Constants.LogitecController;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.AutoAngleCommand;
+import frc.robot.commands.VisionAimCommand;
 import frc.robot.commands.AutoDriveBackCommand;
-import frc.robot.commands.ElevatorDownCommand;
-import frc.robot.commands.ElevatorUpCommand;
-import frc.robot.commands.IndexWheelCommand;
+import frc.robot.commands.ElevatorDropCommand;
+import frc.robot.commands.ElevatorLiftCommand;
+import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IntakeInCommand;
 import frc.robot.commands.IntakeOutCommand;
 import frc.robot.commands.ShootWithDistanceCommand;
-import frc.robot.commands.IntakeGateDownCommand;
-import frc.robot.commands.IntakeGateUpCommand;
+import frc.robot.commands.IntakeDeploy;
+import frc.robot.commands.IntakeRetract;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.WinchUpCommand;
+import frc.robot.commands.WinchReelCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -68,14 +68,14 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final WinchSubsystem winchSubsystem = new WinchSubsystem();
   // Commands
-  private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
-  private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
-  private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
-  private final IntakeGateDownCommand intakeGateDownCommand = new IntakeGateDownCommand(intakeSubsystem);
-  private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
+  private final VisionAimCommand autoAimCommand = new VisionAimCommand(driveSubsystem);
+  private final ElevatorDropCommand elevatorDownCommand = new ElevatorDropCommand(elevatorSubsystem);
+  private final ElevatorLiftCommand elevatorUpCommand = new ElevatorLiftCommand(elevatorSubsystem);
+  private final IntakeDeploy intakeGateDownCommand = new IntakeDeploy(intakeSubsystem);
+  private final IntakeRetract intakeGateUpCommand = new IntakeRetract(intakeSubsystem);
   private final IntakeInCommand intakeInCommand = new IntakeInCommand(intakeSubsystem);
   private final IntakeOutCommand intakeOutCommand = new IntakeOutCommand(intakeSubsystem);
-  private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
+  private final WinchReelCommand winchUpCommand = new WinchReelCommand(winchSubsystem);
 
   XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
   Joystick auxDriverController = new Joystick(OIConstants.AUXDRIVER_CONTROLLER_PORT);
@@ -127,7 +127,7 @@ public class RobotContainer {
     // auxcommands\
     new JoystickButton(auxDriverController, LogitecController.ONE_BUTTON)
         .whileHeld(new ShootWithDistanceCommand(shooterSubsystem)
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
+            .alongWith(new WaitCommand(1).andThen(new IndexerCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.FOUR_BUTTON).whileHeld(winchUpCommand);
     new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
     // new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
@@ -150,7 +150,7 @@ public class RobotContainer {
     // if this stops working move the with timeout to after "(indexSubsytem"
     return new AutoDriveBackCommand(driveSubsystem)
         .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
+            .alongWith(new WaitCommand(1).andThen(new IndexerCommand(indexSubsystem))).withTimeout(7));
 
   }
 
