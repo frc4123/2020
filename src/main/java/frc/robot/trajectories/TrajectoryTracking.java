@@ -9,8 +9,11 @@ import java.util.List;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -19,12 +22,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class autoTrajectory {
+public class TrajectoryTracking {
     public Trajectory allyTrenchBack;
+    public Trajectory centerAutoForwardTurn;
     public Trajectory trajectory2;
     private DriveSubsystem driveSubsystem;
 
-    public autoTrajectory(DriveSubsystem driveSubsystem) throws IOException {
+    public TrajectoryTracking(DriveSubsystem driveSubsystem)  {
         this.driveSubsystem = driveSubsystem;
 
         TrajectoryConfig configForward = new TrajectoryConfig(DriveConstants.MAX_METERS_PER_SECOND,
@@ -40,7 +44,17 @@ public class autoTrajectory {
         .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
         configReverse.setReversed(true);
 
-        trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
+        double divisor = 1.0;
+        centerAutoForwardTurn = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(59.735 / divisor, -32.385 / divisor, new Rotation2d(0)),
+                                        new Pose2d(258.349 / divisor, -71.115 / divisor, new Rotation2d(1.5708))),
+                                configForward);
+        try {
+            trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     public RamseteCommand getRamsete(Trajectory traj) {
         return new RamseteCommand(traj, driveSubsystem::getPose,
@@ -51,8 +65,5 @@ public class autoTrajectory {
                         new PIDController(PIDConstants.OPTIMAL_KP, 0, 0), driveSubsystem::setOutputVoltage, driveSubsystem);
 }
 // @Test
-public void trytest() {
-    getRamsete(trajectory2);
-}
 
 }

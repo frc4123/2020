@@ -32,18 +32,14 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   // ** HARDWARE **\\
 
-  private WPI_TalonSRX leftMaster;
-  //  = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
-  private WPI_VictorSPX leftSlave;
-  //  = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
-  private WPI_TalonSRX rightMaster;
-  //  = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
-  private WPI_VictorSPX rightSlave;
-  //  = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
+  private WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
+  private WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
+  private WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
+  private WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
 
-  private DifferentialDrive diffDrive;
+  private DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
-  private ADXRS450_Gyro gyro;
+  private ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
   // **TRAJECTORY**\\
   DifferentialDriveOdometry odometry;
@@ -55,12 +51,12 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   Pose2d pose;
 
   public DriveSubsystem() {
-    leftMaster  = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
-    rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
-    leftSlave  = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
-    rightSlave  = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
-    gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-    diffDrive = new DifferentialDrive(leftMaster, rightMaster);
+    // WPI_TalonSRX leftMaster  = new WPI_TalonSRX(DriveConstants.LEFT_DRIVE_MASTER_CAN_ID);
+    // WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.RIGHT_DRIVE_MASTER_CAN_ID);
+    // WPI_VictorSPX leftSlave  = new WPI_VictorSPX(DriveConstants.LEFT_DRIVE_SLAVE_CAN_ID);
+    // WPI_VictorSPX rightSlave  = new WPI_VictorSPX(DriveConstants.RIGHT_DRIVE_SLAVE_CAN_ID);
+    // ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+    // DifferentialDrive differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
  
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
@@ -88,7 +84,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * @return Returns the differential drive object
    */
   public DifferentialDrive getDifferentialDrive() {
-    return diffDrive;
+    return differentialDrive;
   }
 
   /**
@@ -99,13 +95,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void arcadeDrive(double fwd, double rot) {
 
-    diffDrive.arcadeDrive(fwd, rot);
+    differentialDrive.arcadeDrive(fwd, rot);
     
   }
 
 
   public void stopMotors(){
-    diffDrive.stopMotor();
+    differentialDrive.stopMotor();
   }
   @Log
   public double getHeading() {
@@ -214,7 +210,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     leftMaster.setVoltage(leftVolts);
     rightMaster.setVoltage(-rightVolts);
 
-    diffDrive.feed();
+    differentialDrive.feed();
   }
 
   public void setVoltageCompensation(boolean isEnabled, double volts) {
@@ -285,7 +281,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void setMaxOutput(double maxOutput) {
 
-    diffDrive.setMaxOutput(maxOutput);
+    differentialDrive.setMaxOutput(maxOutput);
 
   }
 

@@ -48,6 +48,8 @@ import frc.robot.Constants.LogitecController;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.auto.DefaultAuto;
+import frc.robot.auto.TestPath;
 import frc.robot.commands.AutoAngleCommand;
 import frc.robot.commands.AutoDriveBackCommand;
 import frc.robot.commands.ElevatorDownCommand;
@@ -65,6 +67,7 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
+import frc.robot.trajectories.TrajectoryTracking;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -81,6 +84,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final WinchSubsystem winchSubsystem = new WinchSubsystem();
+  public final TrajectoryTracking trajectoryPath = new TrajectoryTracking(driveSubsystem);
   // Commands
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
   private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
@@ -168,6 +172,7 @@ public class RobotContainer {
         .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
             .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
 
+    // return new TestPath(trajectoryPath);
   }
 
 }
