@@ -24,54 +24,51 @@ public class ShootWithDistanceCommand extends CommandBase {
 
   NetworkTableEntry target3D;
 
-  double[] defaultArray;
-  double targetDistance;
   double topVoltage;
   double botVoltage;
 
   public ShootWithDistanceCommand(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSubsystem);
     this.shooterSubsystem = shooterSubsystem;
-
+    addRequirements(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double[] defaultArray = { 0.0, 0.0, 0.0 };
     table = NetworkTableInstance.getDefault().getTable("chameleon-vision").getSubTable("Microsoft LifeCam HD-3000");
-    target3D = table.getEntry("targetPose");
-    targetDistance = target3D.getDoubleArray(defaultArray)[0];
-    getDistance();
+    target3D = table.getEntry("tablePose");
   }
 
   private void getDistance() {
+    double[] defaultArray = { 0.0, 0.0, 0.0 };
+    double targetDistance = target3D.getDoubleArray(defaultArray)[0];
 
-    // boolean threeMeters = (targetDistance <= 3);
-    boolean threeToSixMeters = (targetDistance > 3 && targetDistance <= 6);
-    boolean sixToEight = (targetDistance > 6 && targetDistance <= 8);
-    // if (threeMeters) {
-    // topVoltage = 11;
-    // botVoltage = 12;
-    // }
-    if (threeToSixMeters) {
-      topVoltage = 11.5;
+    boolean threeMeters = (targetDistance <= 3);
+    boolean threeToFourMeters = (targetDistance > 3 && targetDistance <= 4);
+    boolean fourToSixMeters = (targetDistance > 4 && targetDistance <= 6);
+
+    if (threeMeters) {
+      topVoltage = 5;
       botVoltage = 12;
-    } else if (sixToEight) {
+    } else if (threeToFourMeters) {
+      topVoltage = 11;
+      botVoltage = 12;
+    } else if (fourToSixMeters) {
       topVoltage = 12;
       botVoltage = 12;
+    } else if (fourToSixMeters) {
+      topVoltage = 12;
+      botVoltage = 11.7;
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(targetDistance);
+    getDistance();
     shooterSubsystem.setTopShooterMotorVoltage(topVoltage);
     shooterSubsystem.setBottomShooterMotorVoltage(botVoltage);
-    System.out.println(topVoltage);
-    System.out.println(botVoltage);
   }
 
   // Called once the command ends or is interrupted.
