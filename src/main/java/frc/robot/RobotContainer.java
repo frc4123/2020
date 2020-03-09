@@ -48,8 +48,8 @@ import frc.robot.Constants.LogitecController;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.auto.DefaultAuto;
-import frc.robot.auto.TestPath;
+import frc.robot.commands.auto.DefaultAuto;
+import frc.robot.commands.auto.ParallelAllyTrenchAuto;
 import frc.robot.commands.AutoAngleCommand;
 import frc.robot.commands.AutoDriveBackCommand;
 import frc.robot.commands.ElevatorDownCommand;
@@ -165,14 +165,14 @@ public class RobotContainer {
     // Must be aligned to the bottom left corner; middle wheel on the initiation
     // line.
     // clear the command group to use it again, dont do this in teleop
-    CommandGroupBase.clearGroupedCommands();
+    // CommandGroupBase.clearGroupedCommands();
 
     // if this stops working move the with timeout to after "(indexSubsytem"
-    return new AutoDriveBackCommand(driveSubsystem)
-        .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
+    // return new AutoDriveBackCommand(driveSubsystem)
+    //     .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+    //         .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
 
-    // return new TestPath(trajectoryPath);
+    return new ParallelAllyTrenchAuto(trajectoryPath, shooterSubsystem, indexSubsystem);
   }
 
 }

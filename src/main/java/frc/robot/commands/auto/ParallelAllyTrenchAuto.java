@@ -5,22 +5,29 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.auto;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.IndexWheelCommand;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.trajectories.TrajectoryTracking;
 
-import frc.robot.trajectories.TrajectoryTracking;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class DefaultAuto extends SequentialCommandGroup {
+public class ParallelAllyTrenchAuto extends SequentialCommandGroup {
   /**
-   * Creates a new DefaultAuto.
+   * Creates a new TestPath.
    */
-  public DefaultAuto(TrajectoryTracking trajectoryPath) {
+  public ParallelAllyTrenchAuto(TrajectoryTracking trajectoryPath, ShooterSubsystem shooterSubsystem, IndexSubsystem indexSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(trajectoryPath.getRamsete(trajectoryPath.trajectory2));
+    super(trajectoryPath.getRamsete(trajectoryPath.allyTrenchBackParallel)
+          .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+          .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7))
+    );
   }
 }

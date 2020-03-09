@@ -45,7 +45,7 @@ public class AutoDriveBackCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(driveSubsystem.getAverageEncoderDistanceMeters()) >= 3.7/* meters to drive */;
+    return Math.abs(driveSubsystem.getAverageEncoderDistanceMeters()) >= 1/* meters to drive */;
 
   }
 }

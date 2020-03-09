@@ -23,7 +23,8 @@ import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TrajectoryTracking {
-    public Trajectory allyTrenchBack;
+    public Trajectory allyTrenchBackParallel;
+    public Trajectory opponentTrenchSteal;
     public Trajectory centerAutoForwardTurn;
     public Trajectory trajectory2;
     private DriveSubsystem driveSubsystem;
@@ -39,15 +40,23 @@ public class TrajectoryTracking {
 
         TrajectoryConfig configReverse = new TrajectoryConfig(DriveConstants.MAX_METERS_PER_SECOND,
             DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-        .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
-        configReverse.setReversed(true);
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.DRIVE_KINEMATICS)
+            .addConstraint(Constants.MiscConstants.autoVoltageConstraint);
+            configReverse.setReversed(true);
 
         double divisor = 1.0;
         centerAutoForwardTurn = TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(59.735 / divisor, -32.385 / divisor, new Rotation2d(0)),
-                                        new Pose2d(258.349 / divisor, -71.115 / divisor, new Rotation2d(1.5708))),
+                                List.of(new Pose2d(0 / divisor, 0 / divisor, new Rotation2d(0)),
+                                        new Pose2d(2 / divisor, 0 / divisor, new Rotation2d(0))),
+                                configForward);
+        allyTrenchBackParallel =TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(3.048 / divisor, 2.404364 / divisor, new Rotation2d(Math.PI)),
+                                        new Pose2d(3.7 / divisor, 2.404364 / divisor, new Rotation2d(Math.PI))),
+                                configReverse);
+        opponentTrenchSteal =   TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(0 / divisor, 0 / divisor, new Rotation2d(0)),
+                                    new Pose2d(2 / divisor, 0 / divisor, new Rotation2d(0))),
                                 configForward);
         try {
             trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));

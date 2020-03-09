@@ -20,7 +20,7 @@ mPwm:
   mMotorModelConfig:
     mGearReduction: 7.0
     mGearboxEfficiency: 1.0
-    mHasBrake: false
+    mHasBrake: true
     mInverted: true
     mMotorType: CIM
     mNumMotors: 1
@@ -32,8 +32,8 @@ mPwm:
   mMotorModelConfig:
     mGearReduction: 7.0
     mGearboxEfficiency: 1.0
-    mHasBrake: false
-    mInverted: false
+    mHasBrake: true
+    mInverted: true
     mMotorType: CIM
     mNumMotors: 1
   mMotorSimConfig: !!com.snobot.simulator.motor_sim.GravityLoadMotorSimulationConfig
@@ -44,7 +44,7 @@ mPwm:
   mMotorModelConfig:
     mGearReduction: 7.0
     mGearboxEfficiency: 1.0
-    mHasBrake: false
+    mHasBrake: true
     mInverted: false
     mMotorType: CIM
     mNumMotors: 1
@@ -56,7 +56,7 @@ mPwm:
   mMotorModelConfig:
     mGearReduction: 7.0
     mGearboxEfficiency: 1.0
-    mHasBrake: false
+    mHasBrake: true
     mInverted: false
     mMotorType: CIM
     mNumMotors: 1
