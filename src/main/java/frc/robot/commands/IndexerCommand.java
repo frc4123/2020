@@ -9,38 +9,50 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class IntakeGateUpCommand extends CommandBase {
+public class IndexerCommand extends CommandBase {
 
-  IntakeSubsystem intakeSubsystem;
+  IndexSubsystem hopperSubsystem;
+  ShooterSubsystem shooterSubsystem;
 
-  public IntakeGateUpCommand(IntakeSubsystem intakeSubsystem) {
+  /**
+   * Creates a new HopperToShooterThingy.
+   */
+  public IndexerCommand(IndexSubsystem indexSubsystem) {
+    addRequirements(indexSubsystem);
+    this.hopperSubsystem = indexSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem);
-    this.intakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKE_GATE_UP_VOLTAGE);
+    // if (shooterSubsystem.getTopEncoderVelocity() >= 1000)
+    hopperSubsystem.indexMotorSpeed(VoltageConstants.INDEX_WHEEL_SPEED);
+    // System.out.println("Index" + VoltageConstants.INDEX_WHEEL_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeGateVoltage(VoltageConstants.STOP);
+    hopperSubsystem.indexMotorSpeed(VoltageConstants.STOP);
+
+    // System.out.println("index done");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
+
   }
 }
+// change the name of the command class

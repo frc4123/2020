@@ -9,48 +9,48 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
-public class IndexWheelCommand extends CommandBase {
+//TODO make it on a timer so it goes down and doesnt wind back up. change to whenpressed
 
-  IndexSubsystem hopperSubsystem;
+public class ElevatorDropCommand extends CommandBase {
 
-  /**
-   * Creates a new HopperToShooterThingy.
-   */
-  public IndexWheelCommand(IndexSubsystem hopperSubsystem) {
-    addRequirements(hopperSubsystem);
-    this.hopperSubsystem = hopperSubsystem;
+  ElevatorSubsystem elevatorSubsystem;
+
+  public ElevatorDropCommand(ElevatorSubsystem elevatorSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(elevatorSubsystem);
+    this.elevatorSubsystem = elevatorSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    hopperSubsystem.indexMotorSpeed(VoltageConstants.INDEX_WHEEL_SPEED);
-    // System.out.println("Index" + VoltageConstants.INDEX_WHEEL_SPEED);
+    // System.out.println("voltage elevator -3");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hopperSubsystem.indexMotorSpeed(VoltageConstants.STOP);
+    // System.out.println("elevator done");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
 
-    // System.out.println("index done");
+    // elevatorSubsystem.setVoltage(0);
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
-
+    // elevatorSubsystem.isBottomLimitSwitchHit();
   }
 }
-// change the name of the command class

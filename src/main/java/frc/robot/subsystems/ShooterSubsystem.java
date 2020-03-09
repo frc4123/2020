@@ -25,8 +25,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   } 
 
-  public int getEncoderValue(WPI_TalonSRX shooterMotor) {
-    return shooterMotor.getSelectedSensorVelocity();
+  public int getTopEncoderVelocity() {
+    return shooterTop.getSelectedSensorVelocity();
+  }
+  public int getBottomEncoderVelocity() {
+    return shooterBottom.getSelectedSensorVelocity();
   }
  public void setTopShooterMotorVoltage(double voltage) {
 

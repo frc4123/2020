@@ -8,17 +8,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ElevatorUpCommand extends CommandBase {
+public class IntakeBallOutCommand extends CommandBase {
   
-  ElevatorSubsystem elevatorSubsystem;
+  IntakeSubsystem intakeSubsystem;
 
-  public ElevatorUpCommand(ElevatorSubsystem elevatorSubsystem) {
+  public IntakeBallOutCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevatorSubsystem);
-    this.elevatorSubsystem = elevatorSubsystem;
+    addRequirements(intakeSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -29,19 +28,19 @@ public class ElevatorUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // System.out.println("elevator 3 volt");
-    elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_UP_VOLTAGE);
+    intakeSubsystem.setIntakeRollerSpeed(-.3);
+
   }
-  
+
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // System.out.println("elevator done");
-    elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
+    intakeSubsystem.setIntakeRollerSpeed(0);
   }
- @Override
- public boolean isFinished() {
-   //assumes normaly closed? 
-   return false;
-   // elevatorSubsystem.isLimitTopSwitchHit();
- }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

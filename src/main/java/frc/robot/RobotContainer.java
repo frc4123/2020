@@ -7,63 +7,32 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-// import java.io.IOException;
-// import java.nio.file.Paths;
-// import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-// import edu.wpi.first.wpilibj.trajectory.Trajectory;
-// import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-// import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-// import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-// import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-// import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-// import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.LogitecController;
-// import edu.wpi.first.wpilibj.controller.RamseteController;
-// import edu.wpi.first.wpilibj.geometry.Pose2d;
-// import edu.wpi.first.wpilibj.geometry.Rotation2d;
-// import edu.wpi.first.wpilibj.geometry.Translation2d;
-// import frc.robot.Constants.DriveConstants;
+
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.auto.DefaultAuto;
-import frc.robot.commands.auto.ParallelAllyTrenchAuto;
+import frc.robot.commands.auto.FiveBallAuto;
 import frc.robot.commands.AutoAngleCommand;
-import frc.robot.commands.AutoDriveBackCommand;
-import frc.robot.commands.ElevatorDownCommand;
-import frc.robot.commands.ElevatorUpCommand;
-import frc.robot.commands.IndexWheelCommand;
-import frc.robot.commands.IntakeInCommand;
-import frc.robot.commands.IntakeOutCommand;
-import frc.robot.commands.IntakeGateDownCommand;
-import frc.robot.commands.IntakeGateUpCommand;
+import frc.robot.commands.ElevatorDropCommand;
+import frc.robot.commands.ElevatorLiftCommand;
+import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IntakeBallInCommand;
+import frc.robot.commands.IntakeBallOutCommand;
+import frc.robot.commands.IntakeDeployGateCommand;
+import frc.robot.commands.IntakeRetractGateCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.WinchUpCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.IntakeGateSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
@@ -82,17 +51,18 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final IndexSubsystem indexSubsystem = new IndexSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakeGateSubsystem intakeGateSubsystem = new IntakeGateSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final WinchSubsystem winchSubsystem = new WinchSubsystem();
   public final TrajectoryTracking trajectoryPath = new TrajectoryTracking(driveSubsystem);
   // Commands
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
-  private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
-  private final ElevatorUpCommand elevatorUpCommand = new ElevatorUpCommand(elevatorSubsystem);
-  private final IntakeGateDownCommand intakeGateDownCommand = new IntakeGateDownCommand(intakeSubsystem);
-  private final IntakeGateUpCommand intakeGateUpCommand = new IntakeGateUpCommand(intakeSubsystem);
-  private final IntakeInCommand intakeInCommand = new IntakeInCommand(intakeSubsystem);
-  private final IntakeOutCommand intakeOutCommand = new IntakeOutCommand(intakeSubsystem);
+  private final ElevatorLiftCommand elevatorUpCommand = new ElevatorLiftCommand(elevatorSubsystem);
+  private final ElevatorDropCommand elevatorDownCommand = new ElevatorDropCommand(elevatorSubsystem);
+  private final IntakeDeployGateCommand intakeGateDownCommand = new IntakeDeployGateCommand(intakeGateSubsystem);
+  private final IntakeRetractGateCommand intakeGateUpCommand = new IntakeRetractGateCommand(intakeGateSubsystem);
+  private final IntakeBallInCommand intakeInCommand = new IntakeBallInCommand(intakeSubsystem);
+  private final IntakeBallOutCommand intakeOutCommand = new IntakeBallOutCommand(intakeSubsystem);
   private final WinchUpCommand winchUpCommand = new WinchUpCommand(winchSubsystem);
 
   XboxController driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -148,7 +118,7 @@ public class RobotContainer {
     new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
     new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
         .whileHeld(new ShooterCommand(shooterSubsystem)
-            .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))));
+            .alongWith(new WaitCommand(1).andThen(new IndexerCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON)
@@ -161,18 +131,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
 
-
-    // Must be aligned to the bottom left corner; middle wheel on the initiation
-    // line.
-    // clear the command group to use it again, dont do this in teleop
-    // CommandGroupBase.clearGroupedCommands();
-
-    // if this stops working move the with timeout to after "(indexSubsytem"
-    // return new AutoDriveBackCommand(driveSubsystem)
-    //     .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
-    //         .alongWith(new WaitCommand(1).andThen(new IndexWheelCommand(indexSubsystem))).withTimeout(7));
-
-    return new ParallelAllyTrenchAuto(trajectoryPath, shooterSubsystem, indexSubsystem);
+    return new FiveBallAuto(trajectoryPath, intakeGateSubsystem, intakeSubsystem, shooterSubsystem, indexSubsystem);
   }
 
 }

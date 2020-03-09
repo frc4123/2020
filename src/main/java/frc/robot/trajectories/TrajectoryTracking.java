@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -24,7 +23,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class TrajectoryTracking {
     public Trajectory allyTrenchBackParallel;
-    public Trajectory opponentTrenchSteal;
+    public Trajectory opponentTrenchSteal, opponentTrenchBack;
     public Trajectory centerAutoForwardTurn;
     public Trajectory trajectory2;
     private DriveSubsystem driveSubsystem;
@@ -55,9 +54,13 @@ public class TrajectoryTracking {
                                         new Pose2d(3.7 / divisor, 2.404364 / divisor, new Rotation2d(Math.PI))),
                                 configReverse);
         opponentTrenchSteal =   TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(0 / divisor, 0 / divisor, new Rotation2d(0)),
-                                    new Pose2d(2 / divisor, 0 / divisor, new Rotation2d(0))),
+                                List.of(new Pose2d(3.048 / divisor, 7.831836 / divisor, new Rotation2d(0)),
+                                    new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(0))),
                                 configForward);
+        opponentTrenchBack =   TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(0)),
+                                        new Pose2d(3.81 / divisor, 4.125214 / divisor, new Rotation2d(-Math.toRadians(24.31)))),
+                                configReverse);
         try {
             trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
         } catch (IOException e) {
