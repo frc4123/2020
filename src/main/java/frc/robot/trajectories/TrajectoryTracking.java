@@ -54,13 +54,13 @@ public class TrajectoryTracking {
                                         new Pose2d(3.7 / divisor, 2.404364 / divisor, new Rotation2d(Math.PI))),
                                 configReverse);
         opponentTrenchSteal =   TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(3.048 / divisor, 7.831836 / divisor, new Rotation2d(0)),
-                                    new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(0))),
-                                configForward);
-        opponentTrenchBack =   TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(0)),
-                                        new Pose2d(3.81 / divisor, 4.125214 / divisor, new Rotation2d(-Math.toRadians(24.31)))),
+                                List.of(new Pose2d(3.048 / divisor, 7.831836 / divisor, new Rotation2d(Math.PI)),
+                                    new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(Math.PI))),
                                 configReverse);
+        opponentTrenchBack =   TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(5.249926 / divisor, 7.831836 / divisor, new Rotation2d(Math.PI)),
+                                        new Pose2d(3.81 / divisor, 4.125214 / divisor, new Rotation2d(-Math.toRadians(24.31)))),
+                                configForward);
         try {
             trajectory2 = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/StraightPath.wpilib.json"));
         } catch (IOException e) {
