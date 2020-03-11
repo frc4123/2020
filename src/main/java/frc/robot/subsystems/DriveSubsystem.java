@@ -74,8 +74,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     resetEncoders();
 
-    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, Rotation2d.fromDegrees(getHeading())));
+    odometry = new DifferentialDriveOdometry(
+          Rotation2d.fromDegrees(getHeading()),
+          new Pose2d(0, 0, Rotation2d.fromDegrees(getHeading()))
+          );
 
   }
 
@@ -210,7 +212,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     leftMaster.setVoltage(leftVolts);
     rightMaster.setVoltage(-rightVolts);
 
-    differentialDrive.feed();
   }
 
   public void setVoltageCompensation(boolean isEnabled, double volts) {

@@ -8,34 +8,27 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.IndexerCommand;
-import frc.robot.commands.IntakeDeployGateCommand;
-import frc.robot.commands.IntakeBallInCommand;
-import frc.robot.commands.ShootWithDistanceCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.IndexSubsystem;
-import frc.robot.subsystems.IntakeGateSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.trajectories.TrajectoryTracking;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FiveBallAuto extends SequentialCommandGroup {
+public class RedParallelAllyTrenchAuto extends SequentialCommandGroup {
   /**
-   * Creates a new Testing.
+   * Creates a new TestPath.
+   * 
    */
-  public FiveBallAuto(TrajectoryTracking trajectoryPath, IntakeGateSubsystem intakeGateSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, IndexSubsystem indexSubsystem) {
+  public RedParallelAllyTrenchAuto(TrajectoryTracking trajectoryPath, ShooterSubsystem shooterSubsystem, IndexSubsystem indexSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(
-      new IntakeDeployGateCommand(intakeGateSubsystem).withTimeout(0.9),
-          trajectoryPath.getRamsete(trajectoryPath.opponentTrenchSteal).raceWith(
-            new IntakeBallInCommand(intakeSubsystem)),
-          trajectoryPath.getRamsete(trajectoryPath.opponentTrenchBack),
-          // new ShootWithDistanceCommand(shooterSubsystem)
-          new ShooterCommand(shooterSubsystem).alongWith(new IndexerCommand(indexSubsystem))
-          );
+    super(trajectoryPath.getRamsete(trajectoryPath.redAllyTrenchParallelBack)
+          .andThen(new WaitCommand(.2).andThen(new ShooterCommand(shooterSubsystem))
+          .alongWith(new WaitCommand(1).andThen(new IndexerCommand(indexSubsystem))).withTimeout(7))
+    );
   }
 }

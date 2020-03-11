@@ -18,7 +18,9 @@ import frc.robot.Constants.LogitecController;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.auto.FiveBallAuto;
+import frc.robot.commands.auto.RedFiveBallAuto;
+import frc.robot.commands.auto.RedParallelAllyTrenchAuto;
+import frc.robot.commands.auto.testTrajectory;
 import frc.robot.commands.AutoAngleCommand;
 import frc.robot.commands.ElevatorDropCommand;
 import frc.robot.commands.ElevatorLiftCommand;
@@ -131,7 +133,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
 
-    return new FiveBallAuto(trajectoryPath, intakeGateSubsystem, intakeSubsystem, shooterSubsystem, indexSubsystem);
+    // return new FiveBallAuto(trajectoryPath, intakeGateSubsystem, intakeSubsystem, shooterSubsystem, indexSubsystem);
+    // return new RedParallelAllyTrenchAuto(trajectoryPath, shooterSubsystem, indexSubsystem);
+    return new testTrajectory(trajectoryPath);
   }
 
 }
