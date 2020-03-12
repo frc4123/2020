@@ -13,11 +13,11 @@ import frc.robot.trajectories.TrajectoryTracking;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class testTrajectory extends SequentialCommandGroup {
+public class AutoTestTrajectory extends SequentialCommandGroup {
   /**
    * Creates a new Test.
    */
-  public testTrajectory(TrajectoryTracking trajectoryPath) {
+  public AutoTestTrajectory(TrajectoryTracking trajectoryPath) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(trajectoryPath.getRamsete(trajectoryPath.testingTrack));

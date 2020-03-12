@@ -9,30 +9,41 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.IntakeGateSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
-public class IntakeDeployGateCommand extends CommandBase {
-  
-  IntakeGateSubsystem intakeGateSubsystem;
-  
-  public IntakeDeployGateCommand(IntakeGateSubsystem intakeGateSubsystem) {
+//TODO make it on a timer so it goes down and doesnt wind back up. change to whenpressed
+
+public class ElevatorDownCommand extends CommandBase {
+
+  ElevatorSubsystem elevatorSubsystem;
+
+  public ElevatorDownCommand(ElevatorSubsystem elevatorSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeGateSubsystem);
-    this.intakeGateSubsystem = intakeGateSubsystem;
+    addRequirements(elevatorSubsystem);
+    this.elevatorSubsystem = elevatorSubsystem;
   }
 
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //go slower when going down
-    intakeGateSubsystem.setIntakeGateVoltage(VoltageConstants.INTAKE_GATE_DOWN);
+
+    // System.out.println("voltage elevator -3");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeGateSubsystem.setIntakeGateVoltage(VoltageConstants.STOP);
+    // System.out.println("elevator done");
+    elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
+
+    // elevatorSubsystem.setVoltage(0);
 
   }
 
@@ -40,5 +51,6 @@ public class IntakeDeployGateCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+    // elevatorSubsystem.isBottomLimitSwitchHit();
   }
 }

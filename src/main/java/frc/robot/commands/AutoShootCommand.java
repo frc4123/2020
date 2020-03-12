@@ -8,19 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.VoltageConstants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-//TODO make it on a timer so it goes down and doesnt wind back up. change to whenpressed
+public class AutoShootCommand extends CommandBase {
 
-public class ElevatorDropCommand extends CommandBase {
+  ShooterSubsystem shooterSubsystem;
 
-  ElevatorSubsystem elevatorSubsystem;
+  /**
+   * Creates a new ShooterCommand.
+   */
 
-  public ElevatorDropCommand(ElevatorSubsystem elevatorSubsystem) {
+  public AutoShootCommand(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevatorSubsystem);
-    this.elevatorSubsystem = elevatorSubsystem;
+    // SmartDashboard.putNumber("shooter_top", 3);
+    // SmartDashboard.putNumber("shooter_bottom", 3);
+
+    this.shooterSubsystem = shooterSubsystem;
+    addRequirements(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -31,26 +35,22 @@ public class ElevatorDropCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    // System.out.println("voltage elevator -3");
-    elevatorSubsystem.setElevatorSpeed(VoltageConstants.ELEVATOR_DOWN_VOLTAGE);
-
+    shooterSubsystem.setTopShooterMotorVoltage(11.5);
+    System.out.println(shooterSubsystem.getTopEncoderVelocity());
+    shooterSubsystem.setBottomShooterMotorVoltage(12);
+    System.out.println(shooterSubsystem.getBottomEncoderVelocity());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // System.out.println("elevator done");
-    elevatorSubsystem.setElevatorSpeed(VoltageConstants.STOP);
-
-    // elevatorSubsystem.setVoltage(0);
-
+    shooterSubsystem.setTopShooterMotorVoltage(0);
+    shooterSubsystem.setBottomShooterMotorVoltage(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
-    // elevatorSubsystem.isBottomLimitSwitchHit();
   }
 }

@@ -18,18 +18,18 @@ import frc.robot.Constants.LogitecController;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.XboxConstants;
-import frc.robot.commands.auto.RedFiveBallAuto;
-import frc.robot.commands.auto.RedParallelAllyTrenchAuto;
-import frc.robot.commands.auto.testTrajectory;
+// import frc.robot.commands.auto.RedFiveBallAuto;
+// import frc.robot.commands.auto.RedParallelAllyTrenchAuto;
+import frc.robot.commands.auto.AutoTestTrajectory;
 import frc.robot.commands.AutoAngleCommand;
-import frc.robot.commands.ElevatorDropCommand;
+import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorLiftCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IntakeBallInCommand;
 import frc.robot.commands.IntakeBallOutCommand;
-import frc.robot.commands.IntakeDeployGateCommand;
+import frc.robot.commands.IntakeGateDeployCommand;
 import frc.robot.commands.IntakeRetractGateCommand;
-import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.WinchUpCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -60,8 +60,8 @@ public class RobotContainer {
   // Commands
   private final AutoAngleCommand autoAimCommand = new AutoAngleCommand(driveSubsystem);
   private final ElevatorLiftCommand elevatorUpCommand = new ElevatorLiftCommand(elevatorSubsystem);
-  private final ElevatorDropCommand elevatorDownCommand = new ElevatorDropCommand(elevatorSubsystem);
-  private final IntakeDeployGateCommand intakeGateDownCommand = new IntakeDeployGateCommand(intakeGateSubsystem);
+  private final ElevatorDownCommand elevatorDownCommand = new ElevatorDownCommand(elevatorSubsystem);
+  private final IntakeGateDeployCommand intakeGateDownCommand = new IntakeGateDeployCommand(intakeGateSubsystem);
   private final IntakeRetractGateCommand intakeGateUpCommand = new IntakeRetractGateCommand(intakeGateSubsystem);
   private final IntakeBallInCommand intakeInCommand = new IntakeBallInCommand(intakeSubsystem);
   private final IntakeBallOutCommand intakeOutCommand = new IntakeBallOutCommand(intakeSubsystem);
@@ -119,7 +119,7 @@ public class RobotContainer {
     new JoystickButton(auxDriverController, LogitecController.FOUR_BUTTON).whileHeld(winchUpCommand);
     new JoystickButton(auxDriverController, LogitecController.TWO_BUTTON).whileHeld(autoAimCommand);
     new JoystickButton(auxDriverController, LogitecController.THREE_BUTTON)
-        .whileHeld(new ShooterCommand(shooterSubsystem)
+        .whileHeld(new AutoShootCommand(shooterSubsystem)
             .alongWith(new WaitCommand(1).andThen(new IndexerCommand(indexSubsystem))));
     new JoystickButton(auxDriverController, LogitecController.LB_BUTTON).whileHeld(intakeOutCommand);
     new JoystickButton(auxDriverController, LogitecController.RB_BUTTON).whileHeld(intakeInCommand);
@@ -135,7 +135,7 @@ public class RobotContainer {
 
     // return new FiveBallAuto(trajectoryPath, intakeGateSubsystem, intakeSubsystem, shooterSubsystem, indexSubsystem);
     // return new RedParallelAllyTrenchAuto(trajectoryPath, shooterSubsystem, indexSubsystem);
-    return new testTrajectory(trajectoryPath);
+    return new AutoTestTrajectory(trajectoryPath);
   }
 
 }
