@@ -36,7 +36,9 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void execute() {
     shooterSubsystem.setTopShooterMotorVoltage(11.5);
+    System.out.println(shooterSubsystem.getTopEncoderVelocity());
     shooterSubsystem.setBottomShooterMotorVoltage(12);
+    System.out.println(shooterSubsystem.getBottomEncoderVelocity());
   }
 
   // Called once the command ends or is interrupted.

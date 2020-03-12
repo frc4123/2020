@@ -64,9 +64,9 @@ public final class Constants {
 
     public static final double RAMSETE_ZETA = 0.7;
 
-    public static final double MAX_METERS_PER_SECOND = 0.25;
+    public static final double MAX_METERS_PER_SECOND = 0.5;
 
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
 
     public static final double MAX_VOLTAGE_AUTO = 10;
 
@@ -158,13 +158,13 @@ public final class Constants {
 
     public static final double KS_FEEDFOWARD = 1.2;
 
-    public static final double KV_FEEDFOWARD = 0.329;
+    public static final double KV_FEEDFOWARD = 0.5;
 
-    public static final double KA_FEEDFOWARD = 0.0933;
+    public static final double KA_FEEDFOWARD = 0.1;
 
-    public static final double OPTIMAL_KP = 4;
+    public static final double OPTIMAL_KP = 16;
 
-    public static final double OPTIMAL_KD = 4.51;
+    public static final double OPTIMAL_KD = 1;
 
   }
 

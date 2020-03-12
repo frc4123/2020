@@ -24,13 +24,16 @@ public class ShootWithDistanceCommand extends CommandBase {
 
   NetworkTableEntry target3D;
 
-  double topVoltage;
-  double botVoltage;
+  int topMotorSpeed;
+  int bottomMotorSpeed;
+
+  TopShooterPIDCommand topshooterPID;
 
   public ShootWithDistanceCommand(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooterSubsystem = shooterSubsystem;
     addRequirements(shooterSubsystem);
+    topshooterPID = new TopShooterPIDCommand(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -44,43 +47,48 @@ public class ShootWithDistanceCommand extends CommandBase {
     double[] defaultArray = { 0.0, 0.0, 0.0 };
     double targetDistance = target3D.getDoubleArray(defaultArray)[0];
 
+    int defaultEncoderSpeedTop = 0;
+    int defaultEncoderSpeedBottom = 0;
+
+
     boolean threeMeters = (targetDistance <= 3);
     boolean threeToFourMeters = (targetDistance > 3 && targetDistance <= 4);
     boolean fourToSixMeters = (targetDistance > 4 && targetDistance <= 6);
 
     if (threeMeters) {
-      topVoltage = 5;
-      botVoltage = 12;
+      topMotorSpeed = 100;
+      bottomMotorSpeed = 100;
     } else if (threeToFourMeters) {
-      topVoltage = 11;
-      botVoltage = 12;
+      topMotorSpeed = 200;
+      bottomMotorSpeed = 200;
     } else if (fourToSixMeters) {
-      topVoltage = 12;
-      botVoltage = 12;
+      topMotorSpeed = 300;
+      bottomMotorSpeed = 300;
     } else if (fourToSixMeters) {
-      topVoltage = 12;
-      botVoltage = 11.7;
+      topMotorSpeed = 400;
+      bottomMotorSpeed = 400;
+    } else {
+      topMotorSpeed = defaultEncoderSpeedTop;
+      bottomMotorSpeed = defaultEncoderSpeedBottom;
     }
+    shootInPID();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    getDistance();
-    shooterSubsystem.setTopShooterMotorVoltage(topVoltage);
-    shooterSubsystem.setBottomShooterMotorVoltage(botVoltage);
-  }
+private void shootInPID() {
+  int encoderChange = shooterSubsystem.getTopEncoderVelocity() - topMotorSpeed;
+  topshooterPID.setPIDError(encoderChange);
+  topshooterPID.schedule();
+}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.setTopShooterMotorVoltage(0);
-    shooterSubsystem.setBottomShooterMotorVoltage(0);
+    topshooterPID.cancel();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return topshooterPID.getController().atSetpoint();
   }
 }

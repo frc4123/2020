@@ -31,9 +31,9 @@ public class RedFiveBallAuto extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     super(
       new IntakeDeployGateCommand(intakeGateSubsystem).withTimeout(0.9),
-          trajectoryPath.getRamsete(trajectoryPath.redOpponentTrenchSteal).raceWith(
+          trajectoryPath.getRamsete(trajectoryPath.OpponentTrenchSteal).raceWith(
             new IntakeBallInCommand(intakeSubsystem)),
-          trajectoryPath.getRamsete(trajectoryPath.redOpponentTrenchBack),
+          trajectoryPath.getRamsete(trajectoryPath.OpponentTrenchBack),
           // new ShootWithDistanceCommand(shooterSubsystem)
           new ShooterCommand(shooterSubsystem).alongWith(new IndexerCommand(indexSubsystem))
           );
